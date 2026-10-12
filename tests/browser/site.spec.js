@@ -164,7 +164,7 @@ test('HeDi sends questions and history to the chat API and keeps drafts on error
   await page.route('**/api/chat/status', route => route.fulfill({ json: { enabled: true } }));
   await page.route('**/api/chat', route => { requests.push(route.request().postDataJSON()); return route.fulfill({ json: { message: 'Pakiet Hero łączy stronę WWW, asystenta AI i automatyzacje.' } }); });
   await page.goto('/');
-  await page.getByRole('button', { name: 'HEDI', exact: true }).click();
+  await page.getByRole('button', { name: 'Otwórz czat HeDi', exact: true }).click();
   await page.getByRole('button', { name: 'Co to Pakiet Hero?' }).click();
   const chat = page.locator('#hedi-chat');
   await expect(chat.getByRole('log')).toContainText('Pakiet Hero łączy stronę WWW');
@@ -185,7 +185,10 @@ test('HeDi sends questions and history to the chat API and keeps drafts on error
 test('HeDi without a configured key offers contact and fits the mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto('/');
-  await page.getByRole('button', { name: 'HEDI', exact: true }).click();
+  const launcher = page.getByRole('button', { name: 'Otwórz czat HeDi', exact: true });
+  await expect(launcher.locator('img')).toBeVisible();
+  expect(await launcher.locator('img').evaluate(image => image.complete && image.naturalWidth > 0)).toBeTruthy();
+  await launcher.click();
   const chat = page.locator('#hedi-chat');
   await expect(chat).toContainText('HeDi jest chwilowo niedostępny');
   await expect(chat.getByLabel('Wiadomość do HeDi')).toBeDisabled();

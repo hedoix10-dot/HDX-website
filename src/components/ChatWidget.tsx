@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { MessageCircle, Send, X } from 'lucide-react';
+import { Send, X } from 'lucide-react';
 import { useLang } from '../lib/i18n';
 
 type Message = { role: 'user' | 'assistant'; content: string };
@@ -66,9 +66,13 @@ export default function ChatWidget() {
   function submit(event: FormEvent) { event.preventDefault(); send(draft); }
 
   return <>
-    <button ref={button} onClick={() => setOpen(value => !value)} aria-expanded={open} aria-controls="hedi-chat" className="fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 rounded-full border border-teal/40 bg-panel/90 px-4 py-3 font-mono text-[11px] tracking-mega text-teal shadow-glow-teal backdrop-blur"><MessageCircle size={16}/> HEDI</button>
-    {open && <section id="hedi-chat" role="dialog" aria-label={tr('Rozmowa z HeDi', 'Gesprek met HeDi')} className="fixed bottom-24 right-5 z-50 flex max-h-[calc(100dvh-140px)] w-[360px] max-w-[calc(100vw-40px)] flex-col overflow-hidden rounded-[24px] border border-teal/30 bg-panel/95 shadow-card backdrop-blur">
-      <div className="flex items-center justify-between border-b border-line px-5 py-4"><div><p className="font-mono text-xs tracking-mega text-teal">HEDI</p><p className="mt-1 text-xs text-mist">{tr('Twój asystent AI', 'Je AI-assistent')}</p></div><button onClick={() => { setOpen(false); button.current?.focus(); }} aria-label={tr('Zamknij rozmowę', 'Gesprek sluiten')} className="rounded-full p-2 text-mist hover:text-teal"><X size={18}/></button></div>
+    <button ref={button} type="button" onClick={() => setOpen(value => !value)} aria-label={open ? tr('Zamknij czat HeDi', 'HeDi-chat sluiten') : tr('Otwórz czat HeDi', 'HeDi-chat openen')} aria-expanded={open} aria-haspopup="dialog" aria-controls="hedi-chat" className="hedi-launcher fixed bottom-5 right-5 z-50">
+      <span className="hedi-launcher-portrait"><img src="/images/hedi-closeup.jpg" alt="" width={76} height={76} /></span>
+      <span className="hedi-launcher-label" aria-hidden="true">HeDi</span>
+      {open ? <span className="hedi-launcher-close" aria-hidden="true"><X size={13}/></span> : <span className="hedi-launcher-hint" aria-hidden="true">{tr('Porozmawiaj z HeDi', 'Praat met HeDi')}</span>}
+    </button>
+    {open && <section id="hedi-chat" role="dialog" aria-label={tr('Rozmowa z HeDi', 'Gesprek met HeDi')} className="fixed bottom-28 right-5 z-50 flex max-h-[calc(100dvh-156px)] w-[360px] max-w-[calc(100vw-40px)] flex-col overflow-hidden rounded-[24px] border border-teal/30 bg-panel/95 shadow-card backdrop-blur">
+      <div className="flex items-center justify-between border-b border-line px-5 py-4"><div className="flex items-center gap-3"><img src="/images/hedi-closeup.jpg" alt="" width={40} height={40} className="h-10 w-10 rounded-full border border-teal/40 object-cover"/><div><p className="font-mono text-xs tracking-mega text-teal">HEDI</p><p className="mt-1 text-xs text-mist">{tr('Twój asystent AI', 'Je AI-assistent')}</p></div></div><button onClick={() => { setOpen(false); button.current?.focus(); }} aria-label={tr('Zamknij rozmowę', 'Gesprek sluiten')} className="rounded-full p-2 text-mist hover:text-teal"><X size={18}/></button></div>
       <div className="min-h-0 flex-1 overflow-y-auto p-5" role="log" aria-live="polite" aria-relevant="additions text">
         <div className="rounded-2xl border border-line bg-black/25 p-4 text-sm leading-6 text-snow/90">{tr('Cześć! Jestem HeDi. Jak mogę pomóc Twojej firmie?', 'Hoi! Ik ben HeDi. Hoe kan ik jouw bedrijf helpen?')}</div>
         {messages.map((message, index) => <div key={index} className={`mt-3 whitespace-pre-wrap break-words rounded-2xl p-4 text-sm leading-6 ${message.role === 'user' ? 'ml-5 border border-teal/20 bg-teal/10 text-snow' : 'mr-3 border border-line bg-black/25 text-snow/90'}`}>{message.content}</div>)}
