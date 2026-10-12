@@ -66,6 +66,34 @@ test('newsletter normalizes email, saves only consented interests and Dutch conf
   } });
   assert.equal((await send(base, 'newsletter', { ...submission, language: 'nl', interests: ['Ebooks', 'AI', 'AI'] })).status, 200);
 });
+test('product interests use stable segment codes and business contacts have a separate topic', async t => {
+  const saved = [];
+  const base = await running(t, { fetchImpl: async (_url, options) => {
+    if (options.method === 'GET') return Response.json({ results: [] });
+    saved.push(JSON.parse(options.body)); return Response.json({ id: saved.length });
+  } });
+  assert.equal((await send(base, 'newsletter', { ...submission, language: 'nl', interests: ['Kleurplaten'], interest_codes: ['coloring'] })).status, 200);
+  assert.equal(saved[0].segments, 'coloring'); assert.match(saved[0].confirmation_body, /Kleurplaten/);
+  assert.ok(!saved[0].confirmation_body.includes('E-books'));
+  assert.equal((await send(base, 'contact', { ...submission, topic: 'business_offer', message: 'Oferta dla firmy' })).status, 200);
+  assert.equal(saved[1].topic, 'business_offer'); assert.ok(!('segments' in saved[1]));
+  assert.equal((await send(base, 'newsletter', { ...submission, interests: [], interest_codes: ['invented'] })).status, 400);
+});
+test('ebook requests use the selected real title, notify the owner and never opt into newsletter', async t => {
+  let saved;
+  const base = await running(t, { env: { ...env, BASEROW_EBOOK_REQUEST_TABLE_ID: '990' }, fetchImpl: async (url, options) => {
+    assert.equal(url.pathname, '/api/database/rows/table/990/');
+    if (options.method === 'GET') return Response.json({ results: [] });
+    saved = JSON.parse(options.body); return Response.json({ id: 1 });
+  } });
+  assert.deepEqual(await (await fetch(`${base}/api/forms/ebook/status`)).json(), { enabled: true });
+  assert.equal((await send(base, 'ebook', { ...submission, book_id: 'trening-gramatyczny-czasowniki', book_title: 'forged' })).status, 200);
+  assert.equal(saved.book_title, 'E-book Trening Gramatyczny i Czasowniki');
+  assert.equal(saved.source, 'website_ebook_request'); assert.equal(saved.notification_sent, false); assert.equal(saved.fulfilled, false);
+  assert.match(saved.owner_body, /anna@example.com/);
+  assert.ok(!('active' in saved)); assert.ok(!('segments' in saved));
+  assert.equal((await send(base, 'ebook', { ...submission, book_id: 'unknown' })).status, 400);
+});
 
 test('duplicates and retries do not create another row or reactivate an unsubscribed address', async t => {
   let writes = 0;

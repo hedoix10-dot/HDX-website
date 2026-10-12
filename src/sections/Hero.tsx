@@ -6,12 +6,12 @@ export default function Hero() {
   const { t, tr } = useLang();
   return (
     <section id="start" className="relative overflow-hidden pt-[72px]">
-      <div className="container-x grid min-h-[calc(100vh-72px)] items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-10">
-        <div>
+      <div className="container-x grid min-h-[calc(100vh-72px)] items-start gap-12 py-16 lg:grid-cols-[1.45fr_0.65fr] lg:py-10">
+        <div className="hero-copy">
           <p className="kicker">{t.eyebrow}</p>
-          <h1 className="mt-7 font-display text-[42px] font-black leading-[0.95] tracking-tight md:text-[74px]">
-            {t.titleA}<br />
-            <span className="text-blaze text-glow-orange">{t.titleB}</span>
+          <h1 className="hero-title mt-7 font-display font-black leading-[1.04] tracking-tight">
+            <span className="block">{t.titleA}</span>
+            <span className="block text-blaze text-glow-orange">{t.titleB}</span>
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-8 text-mist">{t.heroText}</p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
@@ -20,7 +20,7 @@ export default function Hero() {
           </div>
           <p className="mt-10 font-mono text-[11px] tracking-mega text-mist/70">{tr("HEDOIX © 2026 — AI · SAAS · AUTOMATYZACJA", "HEDOIX © 2026 — AI · SAAS · AUTOMATISERING")}</p>
         </div>
-        <div className="relative mx-auto w-full max-w-[430px]">
+        <div className="hero-portrait relative mx-auto w-full max-w-[360px] lg:mt-28">
           <div className="absolute -inset-8 rounded-full bg-blaze/10 blur-3xl" />
           <div className="image-frame float-slow relative aspect-[4/5]">
             <img src="/images/hedi-hero.jpg" alt="HeDi — maskotka HeDoiX" />

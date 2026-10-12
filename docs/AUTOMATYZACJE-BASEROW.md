@@ -1,5 +1,9 @@
 # Formularze i automatyczne odpowiedzi HeDoiX
 
+Aktualna instrukcja Gmail, segmentów i zamówień konkretnych ebooków: [GMAIL-BASEROW.md](GMAIL-BASEROW.md). Dodano pole segments do Subscribers oraz tabele MailQueue i EbookRequests. Cała wysyłka odbywa się przez Gmail w Baserow; kontakty pozostają w Supabase.
+
+**Aktualna decyzja właściciela:** subskrybenci ebooków i automatyzacje związane z zapisami zostają w Baserow. Kontakty mają trafiać do Supabase. W tym wariancie użyj poniższego schematu Subscribers i workflow powitalnego; nie twórz Contacts ani jego workflow w Baserow. Szczegóły i ustawienia są w [SUPABASE.md](SUPABASE.md). Poniższy pełny prompt opisuje alternatywę, w której oba formularze używają Baserow — dla obecnego wariantu skopiuj tylko część dotyczącą Subscribers.
+
 Strona obsługuje dwa niezależne przepływy:
 
 1. Kontakt → tabela `Contacts` → automatyczne potwierdzenie otrzymania zgłoszenia.
@@ -33,10 +37,12 @@ confirmation_sent_at — Date z godziną, UTC, może być puste
 Tylko w Contacts dodaj:
 company — Single line text, opcjonalne
 message — Long text
+topic — Single select: business_offer, coloring, ebook, general
 status — Single select: new, in_progress, closed; domyślnie new
 
 Tylko w Subscribers dodaj:
 interests — Long text
+segments — Long text
 active — Boolean, domyślnie false
 
 Widoki Contacts:

@@ -1,4 +1,5 @@
 export const nl: Record<string, string> = {
+  'Kolorowanki': 'Kleurplaten', 'Ebooki': 'E-books', 'Niderlandzki — darmowe ebooki': 'Nederlands — gratis e-books',
   '// AGENCJA B2B I AUTOMATYZACJE': '// B2B-BUREAU EN AUTOMATISERING', 'AGENCJA': 'BUREAU', 'I': 'EN', 'AUTOMATYZACJE': 'AUTOMATISERING',
   'Trzy filary, na których budujemy przewagę naszych klientów.': 'Drie pijlers waarmee we onze klanten vooruit helpen.', 'AUTOMATYZACJE DLA': 'AUTOMATISERING VOOR', 'FIRM': 'BEDRIJVEN', 'ŁATWE AUTOMATYZACJE': 'SLIMME AUTOMATISERING', 'Z CRM': 'MET CRM',
   'CO POTRAFI': 'WAT KAN', '// KONTAKT': '// CONTACT', 'ZBUDUJMY': 'BOUW MET ONS AAN', 'TWOJĄ PRZEWAGĘ AI': 'JOUW AI-VOORSPRONG',

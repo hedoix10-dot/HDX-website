@@ -26,6 +26,33 @@ test('NL language persists and privacy deep links work', async ({ page }) => {
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacybeleid');
 });
+test('hero words stay whole and fit the screen in Polish and Dutch, with the portrait below the title start', async ({ page }) => {
+  await page.goto('/');
+  await page.evaluate(() => document.fonts.ready);
+  for (const language of ['pl', 'nl']) {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.getByRole('button', { name: language.toUpperCase(), exact: true }).click();
+    for (const width of [1440, 1024, 722, 390, 320]) {
+      await page.setViewportSize({ width, height: 900 });
+      const metrics = await page.locator('#start h1').evaluate(heading => {
+        const bounds = heading.getBoundingClientRect();
+        const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+        const words = [];
+        let node;
+        while ((node = walker.nextNode())) for (const match of node.textContent.matchAll(/\S+/g)) {
+          const range = document.createRange();
+          range.setStart(node, match.index); range.setEnd(node, match.index + match[0].length);
+          const rects = [...range.getClientRects()];
+          words.push({ word: match[0], whole: rects.length === 1, fits: rects.every(rect => rect.left >= bounds.left - 1 && rect.right <= bounds.right + 1) });
+        }
+        return { words, scroll: document.documentElement.scrollWidth > innerWidth, imageLower: document.querySelector('.hero-portrait').getBoundingClientRect().top > bounds.top };
+      });
+      expect(metrics.words.every(word => word.whole && word.fits), `${language} at ${width}px: ${JSON.stringify(metrics.words)}`).toBeTruthy();
+      expect(metrics.scroll).toBeFalsy();
+      expect(metrics.imageLower).toBeTruthy();
+    }
+  }
+});
 test('contact validates consent and prepares an encoded email without claiming delivery', async ({ page }) => {
   await page.goto('/#kontakt');
   const form = page.getByTestId('contact-form');
@@ -88,8 +115,49 @@ test('configured newsletter sends selected interests and explicit consent in the
   await form.getByRole('checkbox').check();
   await form.getByRole('button', { name: 'LAAT JE E-MAIL ACHTER' }).click();
   await expect(form.getByLabel('Naam', { exact: true })).toHaveValue('');
-  expect(request).toMatchObject({ language: 'nl', consent: true, interests: ['AI-muziek'], type: 'newsletter' });
+  expect(request).toMatchObject({ language: 'nl', consent: true, interests: ['AI-muziek'], interest_codes: ['ai_music'], type: 'newsletter' });
   await expect(form.getByRole('button', { name: 'AI-muziek', exact: true })).toHaveAttribute('aria-pressed', 'false');
+});
+test('coloring and ebook subscriptions are separate choices and company inquiries carry their own topic', async ({ page }) => {
+  const submissions = [];
+  await page.route('**/api/forms/status', route => route.fulfill({ json: { contact: true, newsletter: true } }));
+  await page.route('**/api/forms/newsletter', route => { submissions.push(route.request().postDataJSON()); return route.fulfill({ json: { status: 'accepted' } }); });
+  await page.goto('/');
+  const signup = page.getByTestId('signup-form');
+  await signup.getByLabel('Imię', { exact: true }).fill('Anna');
+  await signup.getByLabel('E-mail', { exact: true }).fill('anna@example.com');
+  await signup.getByRole('button', { name: 'Kolorowanki', exact: true }).click();
+  await expect(signup.getByRole('button', { name: 'Ebooki', exact: true })).toHaveAttribute('aria-pressed', 'false');
+  await signup.getByRole('checkbox').check();
+  await signup.getByRole('button', { name: 'ZOSTAW KONTAKT' }).click();
+  await expect(signup.getByLabel('Imię', { exact: true })).toHaveValue('');
+  expect(submissions[0].interest_codes).toEqual(['coloring']);
+  const contact = page.getByTestId('contact-form');
+  await expect(contact.getByLabel('Temat zgłoszenia', { exact: true })).toHaveValue('business_offer');
+});
+test('both Dutch ebook links lead to a dedicated form and send the selected book without subscribing', async ({ page }) => {
+  const submissions = [];
+  await page.route('**/api/forms/ebook/status', route => route.fulfill({ json: { enabled: true } }));
+  await page.route('**/api/forms/ebook', route => { submissions.push(route.request().postDataJSON()); return route.fulfill({ json: { status: 'accepted' } }); });
+  await page.goto('/#niderlandzki');
+  const education = page.locator('#niderlandzki');
+  await expect(education.getByRole('heading', { name: 'E-book Trening Gramatyczny i Czasowniki', exact: true })).toBeVisible();
+  await expect(education.getByRole('heading', { name: 'E-Book PODSTAWY Nederlands leren', exact: true })).toBeVisible();
+  await education.getByRole('link', { name: 'Przejdź do formularza', exact: true }).first().click();
+  await expect(page).toHaveURL(/\/ebooki\/trening-gramatyczny-czasowniki$/);
+  await page.reload();
+  const form = page.getByTestId('ebook-request-form');
+  await form.getByLabel('Imię', { exact: true }).fill('Anna');
+  await form.getByLabel('E-mail', { exact: true }).fill('anna@example.com');
+  await form.getByRole('button', { name: 'POPROŚ O EBOOK', exact: true }).click();
+  expect(submissions).toHaveLength(0);
+  await form.getByRole('checkbox').check();
+  await form.getByRole('button', { name: 'POPROŚ O EBOOK', exact: true }).click();
+  await expect(form.getByLabel('Imię', { exact: true })).toHaveValue('');
+  expect(submissions[0]).toMatchObject({ type: 'ebook', book_id: 'trening-gramatyczny-czasowniki', book_title: 'E-book Trening Gramatyczny i Czasowniki' });
+  expect(submissions[0]).not.toHaveProperty('interest_codes');
+  await page.goto('/ebooki/podstawy-nederlands-leren');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('E-Book PODSTAWY Nederlands leren');
 });
 test('HeDi sends questions and history to the chat API and keeps drafts on errors', async ({ page }) => {
   const requests = [];

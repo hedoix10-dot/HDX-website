@@ -1,5 +1,7 @@
 # Gdzie podłączyć Baserow i API
 
+**Wybrana konfiguracja docelowa:** Baserow edytuje produkty i obsługuje subskrybentów ebooków; Supabase przechowuje zsynchronizowany katalog oraz zgłoszenia kontaktowe. Wdrożenie i wszystkie zmienne opisuje [SUPABASE.md](SUPABASE.md). Poniżej pozostają instrukcje dla samodzielnego wariantu Baserow oraz usług dodatkowych.
+
 ## Baserow — ebooki i kolorowanki
 
 **Baserow Cloud:** utwórz bazę/tabelę w panelu Baserow. Wgraj ebooki, kolorowanki i okładki do pól File. Strukturę `Products` znajdziesz w `BASEROW.md`.
@@ -84,4 +86,6 @@ Dla obecnego katalogu darmowych ebooków najprościej pozostawić Baserow jako m
 
 Supabase warto dołączyć do osobnych zadań: kont użytkowników, logowania, historii zakupów albo przechowywania plików z dostępem dla uprawnionych użytkowników. Baserow może wtedy nadal być panelem redakcyjnym katalogu. Nie ma potrzeby dublowania rekordów produktów w obu bazach.
 
-Na tym etapie nie dodano Supabase do aplikacji. Rozsądny kolejny krok to połączenie obecnej tabeli Baserow i sprawdzenie pierwszego darmowego PDF-u. Decyzję o Supabase można podjąć przy wdrażaniu kont lub płatnych materiałów.
+Integracja Supabase jest przygotowana dla projektu `https://smjzlzhbnojrdrhvnapp.supabase.co`. Katalog może być czytany z Supabase po automatycznej synchronizacji z Products w Baserow. Kontakty mogą trafiać do Supabase, natomiast newsletter i subskrybenci ebooków pozostają wyłącznie w Baserow. Konfigurację obu formularzy wybiera się niezależnie przez CONTACT_PROVIDER i NEWSLETTER_PROVIDER. Do uruchomienia potrzebne są SQL oraz serwerowy klucz projektu; nie skonfigurowano ich na koncie użytkownika. Instrukcja: [SUPABASE.md](SUPABASE.md).
+
+Aktualna instrukcja Gmail, segmentów i dwóch formularzy ebooków: [GMAIL-BASEROW.md](GMAIL-BASEROW.md). Gmail konfiguruje się tylko w Baserow; Render używa HTTPS i MailQueue. Dla czatu HEDI_OPENAI_API_KEY jest zalecaną nazwą; standardowe OPENAI_API_KEY też jest obsługiwane jako alias.

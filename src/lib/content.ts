@@ -163,11 +163,13 @@ export const entertainmentCards = [
 ];
 
 export const interests = [
-  'Automatyzacje dla firm',
-  'Strona + asystent AI',
-  'WerkBuddy',
-  'Kolorowanki i ebooki',
-  'Muzyka AI',
+  { code: 'business_automation', label: 'Automatyzacje dla firm' },
+  { code: 'hero_package', label: 'Strona + asystent AI' },
+  { code: 'werkbuddy', label: 'WerkBuddy' },
+  { code: 'coloring', label: 'Kolorowanki' },
+  { code: 'ebook', label: 'Ebooki' },
+  { code: 'dutch_learning', label: 'Niderlandzki — darmowe ebooki' },
+  { code: 'ai_music', label: 'Muzyka AI' },
 ];
 
 export const contact = {

@@ -22,6 +22,8 @@ Tryb edycji: pozostaw `npm start` uruchomione w jednym terminalu, a w drugim uru
 - [Gdzie podłączyć Baserow i API](docs/INTEGRACJE.md)
 - [Gotowy prompt do AI Baserow](docs/PROMPT-BASEROW.md)
 - [Formularze i automatyczne odpowiedzi Baserow](docs/AUTOMATYZACJE-BASEROW.md)
+- [Supabase + Baserow — wybrana architektura i konfiguracja](docs/SUPABASE.md)
+- [Gdzie wpisać dane Gmail i skonfigurować zamówienia ebooków](docs/GMAIL-BASEROW.md)
 - [Ustawienia i wdrożenie Render](docs/RENDER.md)
 - `render.yaml`: gotowy Blueprint Web Service.
 - `.env.example`: nazwy ustawień; kopiuj lokalnie do `.env`, nigdy nie commituj tokenów.
@@ -30,11 +32,15 @@ Token Baserow jest używany wyłącznie na serwerze (`server/app.js`, `server/fo
 
 ## Formularze
 
+Wybrany wariant docelowy: Baserow pozostaje panelem produktów i miejscem obsługi subskrybentów ebooków. Supabase obsługuje zsynchronizowany katalog oraz kontakty. Aktywacja wymaga wykonania migracji SQL i ustawienia `CATALOG_PROVIDER=supabase`, `CONTACT_PROVIDER=supabase`, `NEWSLETTER_PROVIDER=baserow`, `SUPABASE_URL` oraz poufnego `SUPABASE_SECRET_KEY`. Instrukcja: [SUPABASE.md](docs/SUPABASE.md). Bez jawnego wyboru dostawcy obowiązuje dotychczasowy wariant Baserow.
+
 Po ustawieniu `BASEROW_CONTACT_TABLE_ID` i `BASEROW_NEWSLETTER_TABLE_ID` formularze zapisują dane przez serwer w tabelach Contacts i Subscribers. Token potrzebuje Read + Create na każdej z nich. Osobne workflow Baserow wysyłają potwierdzenia PL/NL przez SMTP. Szczegóły tabel i automatyzacji: [AUTOMATYZACJE-BASEROW.md](docs/AUTOMATYZACJE-BASEROW.md).
 
 Bez konfiguracji tabel formularze **przygotowują e-mail** do `Hedoix10@gmail.com`. Użytkownik musi otworzyć wiadomość i wysłać ją w swoim programie pocztowym. Strona nie deklaruje wysłania zgłoszenia w tym trybie.
 
 Opcjonalnie ustaw wspólny publiczny endpoint w `VITE_WEBHOOK_URL`, zgodnie z paczką źródłową. Otrzyma JSON z `type: contact` lub `type: newsletter`. Możesz też utworzyć dwa formularze w Formspree i ustawić oddzielne `VITE_CONTACT_ENDPOINT` oraz `VITE_SIGNUP_ENDPOINT`, np. `https://formspree.io/f/TWOJE_ID`. Oddzielny adres ma pierwszeństwo przed wspólnym webhookiem; zewnętrzne adresy mają pierwszeństwo przed endpointami Baserow. Są to publiczne adresy formularzy, a nie tokeny. API zewnętrzne musi obsługiwać CORS i JSON; przebuduj aplikację po ustawieniu adresu. Sukces jest pokazywany dopiero po odpowiedzi HTTP 2xx. W trybie zewnętrznego dostawcy nie jest potrzebny token Baserow.
+
+Subskrybenci mają osobny wybór kolorowanek, ebooków i nauki niderlandzkiego oraz stałe segmenty niezależne od języka. Kontakt ma temat (domyślnie zapytanie o ofertę firmy). Zamówienia dwóch ebooków podanych przez właściciela trafiają do EbookRequests w Baserow, bez dopisywania do newslettera. Potwierdzenia kontaktów z Supabase są przekazywane przez HTTPS do MailQueue; wszystkie wiadomości wychodzą przez Gmail skonfigurowany tylko w Baserow. Render Free blokuje porty SMTP. Prompt tabel i ustawienia: [GMAIL-BASEROW.md](docs/GMAIL-BASEROW.md).
 
 ## Testy
 
@@ -48,6 +54,8 @@ Testy API używają kontrolowanych odpowiedzi Baserow. Nie wymagają zewnętrzne
 ## Grafiki i zakres
 
 Główne grafiki, komponenty i style pochodzą z `hedoix-vite-clone.zip`. Zdjęcia hero/close-up oraz dashboard uaktualniono do wersji 1024 × 1024 zgodnych z grafikami wskazanymi przez użytkownika. Pełna sylwetka oraz siedzący HeDi są widoczne w rozmowie, ale ich pliki nie są jeszcze dostępne w projekcie. Treści oraz wygląd paczki są głównym wzorem; dokument odtworzenia jest materiałem pomocniczym. Tłumaczenie NL jest przygotowane w projekcie. Poprzednia wersja została zachowana poza repozytorium jako `/workspace/hedoix-before-clone.zip`.
+
+Nagłówek hero zachowuje całe słowa przy 320–1440 px; zdjęcie HeDi obniżono, a siatka 56 × 56 px jest widoczna pod wszystkimi sekcjami. Oryginalne nowe logo HDX pokazano inline, ale jego plik nie jest dostępny. Po otrzymaniu PNG/JPG/SVG umieść go w `public/images` i ustaw publiczny `VITE_BRAND_LOGO_URL`, np. `/images/hdx-logo.png`, następnie przebuduj. Komponent Logo użyje go w nagłówku i stopce; przy błędzie zostaje dotychczasowy znak.
 
 Chat HeDi korzysta z OpenAI przez serwerowy endpoint `/api/chat`. W Render Environment dodaj `HEDI_OPENAI_API_KEY`; model domyślny to `gpt-4.1-mini`. Bez klucza chat pokazuje niedostępność i kontakt. Testy OpenAI są symulowane; działanie na żywo wymaga uzupełnienia klucza. Gry, muzyka i e-learning są zapowiedziane jako „wkrótce”. Katalog obsługuje bezpłatne publiczne pobrania. Ebooki do nauki niderlandzkiego trafiają do Edukacji przy `section=education`, `category=ebook`, `price=0`. Pozostałe produkty pozostają w Rozrywce; starsze rekordy bez pola section domyślnie trafiają do Rozrywki. Płatne produkty mają cenę i kontakt; płatności oraz chroniona dystrybucja plików wymagają osobnego wdrożenia.
 

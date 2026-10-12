@@ -24,26 +24,26 @@ export default function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink/70 backdrop-blur-xl">
       <div className="container-x flex h-[72px] items-center justify-between gap-4">
         <Logo />
-        <nav aria-label="Main navigation" className="hidden items-center gap-5 font-mono text-[10px] tracking-mega text-snow/80 xl:gap-8 lg:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-5 font-mono text-[10px] tracking-mega text-snow/80 xl:flex xl:gap-8">
           {navItems.map((item) => (
             <a key={item.id} href={`/#${item.id}`} className="transition hover:text-teal" data-testid={`nav-link-${item.id}`}>
               {t[labels[item.id]]}
             </a>
           ))}
         </nav>
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <div className="flex overflow-hidden rounded-full border border-line bg-panel p-1">
             <button onClick={() => setLang('pl')} aria-pressed={lang === 'pl'} className={`rounded-full px-3 py-1 font-mono text-[11px] tracking-mega ${lang === 'pl' ? 'bg-teal/15 text-teal' : 'text-mist'}`}>PL</button>
             <button onClick={() => setLang('nl')} aria-pressed={lang === 'nl'} className={`rounded-full px-3 py-1 font-mono text-[11px] tracking-mega ${lang === 'nl' ? 'bg-teal/15 text-teal' : 'text-mist'}`}>NL</button>
           </div>
           <a href="/#kontakt" className="btn-primary !px-4 !text-[10px] xl:!px-6">{t.cta}</a>
         </div>
-        <button ref={menuButton} onClick={() => setOpen(v => !v)} className="grid h-11 w-11 place-items-center rounded-full border border-line lg:hidden" aria-label={open ? (lang === 'pl' ? 'Zamknij menu' : 'Menu sluiten') : (lang === 'pl' ? 'Otwórz menu' : 'Menu openen')} aria-expanded={open} aria-controls="mobile-menu">
+        <button ref={menuButton} onClick={() => setOpen(v => !v)} className="grid h-11 w-11 place-items-center rounded-full border border-line xl:hidden" aria-label={open ? (lang === 'pl' ? 'Zamknij menu' : 'Menu sluiten') : (lang === 'pl' ? 'Otwórz menu' : 'Menu openen')} aria-expanded={open} aria-controls="mobile-menu">
           {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
       {open && (
-        <div id="mobile-menu" className="border-t border-line bg-ink/95 px-5 pb-6 pt-4 lg:hidden">
+        <div id="mobile-menu" className="border-t border-line bg-ink/95 px-5 pb-6 pt-4 xl:hidden">
           <div className="grid gap-4 font-mono text-[12px] tracking-mega text-snow/85">
             {navItems.map((item) => (
               <a key={item.id} href={`/#${item.id}`} onClick={() => setOpen(false)} data-testid={`mobile-nav-${item.id}`}>{t[labels[item.id]]}</a>

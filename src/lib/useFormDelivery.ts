@@ -3,11 +3,11 @@ import { toast } from 'sonner';
 import { useLang } from './i18n';
 import { contact } from './content';
 
-export function useFormDelivery(type: 'contact' | 'newsletter') {
+export function useFormDelivery(type: 'contact' | 'newsletter' | 'ebook') {
   const { tr, lang } = useLang();
   const [loading, setLoading] = useState(false);
   const [draft, setDraft] = useState('');
-  const externalEndpoint = (type === 'contact' ? import.meta.env.VITE_CONTACT_ENDPOINT : import.meta.env.VITE_SIGNUP_ENDPOINT) || import.meta.env.VITE_WEBHOOK_URL;
+  const externalEndpoint = (type === 'contact' ? import.meta.env.VITE_CONTACT_ENDPOINT : type === 'ebook' ? import.meta.env.VITE_EBOOK_ENDPOINT : import.meta.env.VITE_SIGNUP_ENDPOINT) || import.meta.env.VITE_WEBHOOK_URL;
   const [configured, setConfigured] = useState(false);
   const [checking, setChecking] = useState(!externalEndpoint);
   const submission = useRef({ payload: '', id: '' });
@@ -16,7 +16,7 @@ export function useFormDelivery(type: 'contact' | 'newsletter') {
   useEffect(() => {
     if (externalEndpoint) return;
     const abort = new AbortController();
-    fetch('/api/forms/status', { signal: AbortSignal.any([abort.signal, AbortSignal.timeout(15000)]) }).then(response => response.ok ? response.json() : null).then(data => setConfigured(data?.[type] === true)).catch(() => {}).finally(() => { if (!abort.signal.aborted) setChecking(false); });
+    fetch(type === 'ebook' ? '/api/forms/ebook/status' : '/api/forms/status', { signal: AbortSignal.any([abort.signal, AbortSignal.timeout(15000)]) }).then(response => response.ok ? response.json() : null).then(data => setConfigured((type === 'ebook' ? data?.enabled : data?.[type]) === true)).catch(() => {}).finally(() => { if (!abort.signal.aborted) setChecking(false); });
     return () => abort.abort();
   }, [type, externalEndpoint]);
   async function deliver(payload: Record<string, unknown>) {
@@ -43,7 +43,7 @@ export function useFormDelivery(type: 'contact' | 'newsletter') {
       if (!response.ok) throw new Error('Submission rejected');
       if (!externalEndpoint && (await response.json()).status !== 'accepted') throw new Error('Submission not saved');
       submission.current = { payload: '', id: '' };
-      toast.success(type === 'contact' ? tr('Zgłoszenie wysłane. Dziękujemy!', 'Je aanvraag is verzonden. Bedankt!') : tr('Zapis przyjęty. Dziękujemy!', 'Je aanmelding is ontvangen. Bedankt!'));
+      toast.success(type === 'newsletter' ? tr('Zapis przyjęty. Dziękujemy!', 'Je aanmelding is ontvangen. Bedankt!') : tr('Zgłoszenie wysłane. Dziękujemy!', 'Je aanvraag is verzonden. Bedankt!'));
       return true;
     } catch {
       toast.error(tr('Nie udało się wysłać zgłoszenia. Spróbuj ponownie lub napisz do nas e-mail.', 'Verzenden is niet gelukt. Probeer opnieuw of stuur ons een e-mail.'));

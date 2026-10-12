@@ -23,3 +23,6 @@ services:
         sync: false
       - key: HEDI_OPENAI_MODEL
         value: gpt-4.1-mini
+      # Supabase hybrid settings are optional. Add them in Render Environment
+      # after running the SQL migration; existing Baserow deployment can start
+      # without them. See docs/SUPABASE.md. Subscribers remain in Baserow.

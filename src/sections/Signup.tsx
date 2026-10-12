@@ -19,7 +19,8 @@ export default function Signup() {
       type: 'newsletter',
       name: form.get('name'),
       email: form.get('email'),
-      interests: selected.map(index => interests[index]),
+      interests: selected.map(index => interests[index].label),
+      interest_codes: selected.map(index => interests[index].code),
       consent: form.get('consent') === 'on',
       website: form.get('website'),
     };
@@ -45,12 +46,12 @@ export default function Signup() {
               {interests.map((item, index) => (
                 <button
                   type="button"
-                  key={item}
+                  key={item.code}
                   onClick={() => { clearDraft(); setSelected(s => s.includes(index) ? s.filter(x => x !== index) : [...s, index]); }}
                   aria-pressed={selected.includes(index)}
                   className={`chip transition ${selected.includes(index) ? 'border-teal/60 bg-teal/10 text-teal' : 'hover:border-blaze/50 hover:text-blaze'}`}
                 >
-                  {item}
+                  {item.label}
                 </button>
               ))}
             </div>

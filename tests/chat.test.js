@@ -20,6 +20,16 @@ test('missing OpenAI key disables chat without making an upstream call', async t
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: 'chat_not_configured' });
 });
+test('standard OPENAI_API_KEY is supported without exposing it to the browser', async t => {
+  const base = await running(t, { env: { HEDI_OPENAI_API_KEY: ' ', OPENAI_API_KEY: 'standard-private-key' }, fetchImpl: async (_url, options) => {
+    assert.equal(options.headers.Authorization, 'Bearer standard-private-key');
+    return answer();
+  } });
+  assert.deepEqual(await (await fetch(`${base}/api/chat/status`)).json(), { enabled: true });
+  const response = await post(base);
+  assert.equal(response.status, 200);
+  assert.ok(!(await response.text()).includes('standard-private-key'));
+});
 test('chat sends bounded history privately to Responses API and returns assistant text only', async t => {
   const base = await running(t, { env: { ...env, HEDI_OPENAI_MODEL: 'gpt-4.1-mini' }, fetchImpl: async (url, options) => {
     assert.equal(url, 'https://api.openai.com/v1/responses');
