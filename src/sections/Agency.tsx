@@ -21,7 +21,7 @@ export default function Agency() {
 
       <div className="mt-12 grid gap-6 lg:grid-cols-3">
         {pillars.map((p, i) => (
-          <Reveal key={p.no} delay={i * 0.08} className={`panel-card panel-card-hover p-8 ${i === 1 ? 'border-teal/35 shadow-glow-teal' : ''}`}>
+          <Reveal key={p.no} delay={i * 0.08} className="panel-card panel-card-hover p-8">
             <p className="font-mono text-sm text-blaze">{p.no}</p>
             <h3 className="mt-6 font-display text-[22px] font-black leading-tight">{p.title}</h3>
             <p className={`mt-5 text-sm leading-7 ${i === 1 ? 'font-semibold text-teal' : i === 2 ? 'font-semibold text-blaze' : 'font-semibold text-blaze'}`}>{p.lead}</p>
@@ -39,7 +39,7 @@ export default function Agency() {
         {automationCards.map((card, i) => {
           const Icon = icons[card.icon as keyof typeof icons];
           return (
-            <Reveal key={card.title} delay={i * 0.04} className={`panel-card panel-card-hover p-6 ${i === 0 ? 'border-teal/50 shadow-glow-teal' : ''}`}>
+            <Reveal key={card.title} delay={i * 0.04} className="panel-card panel-card-hover p-6">
               <div className="flex items-start gap-4">
                 <div className="icon-box"><Icon size={20} /></div>
                 <div>

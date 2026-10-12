@@ -41,11 +41,8 @@ test('contact validates consent and prepares an encoded email without claiming d
   expect(decodeURIComponent(href)).toContain('Potrzebuję strony & automatyzacji.');
   await expect(form).not.toContainText('zgłoszenie zostało wysłane');
 });
-test('interest signup prepares selected interests and demo chat responds', async ({ page }) => {
+test('interest signup prepares selected interests', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'HEDI', exact: true }).click();
-  await page.getByRole('button', { name: 'Co to Pakiet Hero?' }).click();
-  await expect(page.locator('#hedi-chat')).toContainText('łączy stronę WWW');
   const form = page.getByTestId('signup-form');
   await form.getByLabel('Imię', { exact: true }).fill('Jan');
   await form.getByLabel('E-mail', { exact: true }).fill('jan@example.com');
@@ -54,6 +51,43 @@ test('interest signup prepares selected interests and demo chat responds', async
   await form.getByRole('button', { name: 'PRZYGOTUJ WIADOMOŚĆ' }).click();
   const href = await form.getByRole('link', { name: 'Otwórz wiadomość e-mail' }).getAttribute('href');
   expect(decodeURIComponent(href)).toContain('Muzyka AI');
+});
+test('HeDi sends questions and history to the chat API and keeps drafts on errors', async ({ page }) => {
+  const requests = [];
+  await page.route('**/api/chat/status', route => route.fulfill({ json: { enabled: true } }));
+  await page.route('**/api/chat', route => { requests.push(route.request().postDataJSON()); return route.fulfill({ json: { message: 'Pakiet Hero łączy stronę WWW, asystenta AI i automatyzacje.' } }); });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'HEDI', exact: true }).click();
+  await page.getByRole('button', { name: 'Co to Pakiet Hero?' }).click();
+  const chat = page.locator('#hedi-chat');
+  await expect(chat.getByRole('log')).toContainText('Pakiet Hero łączy stronę WWW');
+  expect(requests[0]).toEqual({ language: 'pl', messages: [{ role: 'user', content: 'Co to Pakiet Hero?' }] });
+  await chat.getByLabel('Wiadomość do HeDi').fill('Jak zamówić?');
+  await chat.getByRole('button', { name: 'Wyślij do HeDi' }).click();
+  await expect(chat.getByLabel('Wiadomość do HeDi')).toHaveValue('');
+  expect(requests[1].messages).toHaveLength(3);
+  await page.route('**/api/chat', route => route.fulfill({ status: 503, json: { error: 'chat_unavailable' } }));
+  await chat.getByLabel('Wiadomość do HeDi').fill('Proszę o wycenę');
+  await chat.getByRole('button', { name: 'Wyślij do HeDi' }).click();
+  await expect(chat.getByRole('alert')).toContainText('HeDi nie może teraz odpowiedzieć');
+  await expect(chat.getByLabel('Wiadomość do HeDi')).toHaveValue('Proszę o wycenę');
+  await page.route('**/api/chat', route => route.fulfill({ status: 429, json: { error: 'chat_rate_limited' } }));
+  await chat.getByRole('button', { name: 'Wyślij do HeDi' }).click();
+  await expect(chat.getByRole('alert')).toContainText('spróbuj ponownie za minutę');
+});
+test('HeDi without a configured key offers contact and fits the mobile viewport', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 800 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'HEDI', exact: true }).click();
+  const chat = page.locator('#hedi-chat');
+  await expect(chat).toContainText('HeDi jest chwilowo niedostępny');
+  await expect(chat.getByLabel('Wiadomość do HeDi')).toBeDisabled();
+  await expect(chat.getByRole('link', { name: 'Kontakt', exact: true })).toBeVisible();
+  const bounds = await chat.boundingBox();
+  expect(bounds.x).toBeGreaterThanOrEqual(0);
+  expect(bounds.x + bounds.width).toBeLessThanOrEqual(320);
+  await page.keyboard.press('Escape');
+  await expect(chat).toHaveCount(0);
 });
 test('catalog filters products and exposes free download, handles a failure', async ({ page }) => {
   await page.route('**/api/products*', route => route.fulfill({ json: { status: 'ok', nextPage: null, results: [{ id: 1, title: 'Poradnik AI', description: 'Test ebook', category: 'ebook', language: 'pl', price: 0, cover: null, download: 'https://files.example.org/ebook.pdf' }, { id: 2, title: 'Kolory biura', description: 'Test coloring', category: 'coloring', language: 'pl', price: 5, cover: null, download: null }] } }));
@@ -67,6 +101,20 @@ test('catalog filters products and exposes free download, handles a failure', as
   await page.route('**/api/products*', route => route.fulfill({ status: 503, json: { error: 'catalog_unavailable' } }));
   await page.reload();
   await expect(catalog.getByText('Nie możemy teraz wczytać biblioteki.')).toBeVisible();
+});
+test('free Dutch learning ebooks appear in Education while other publications stay in Entertainment', async ({ page }) => {
+  const book = { id: 1, title: 'Niderlandzki — testowy ebook', description: 'Materiał do nauki', category: 'ebook', section: 'education', language: 'pl/nl', price: 0, cover: null, download: 'https://files.example.org/dutch.pdf' };
+  await page.route('**/api/products*', route => route.fulfill({ json: { status: 'ok', nextPage: null, results: [book, { ...book, id: 2, title: 'Inny ebook', section: 'entertainment' }, { ...book, id: 3, title: 'Płatny materiał', price: 5, download: null }] } }));
+  await page.goto('/');
+  const education = page.locator('#edukacja');
+  await expect(education.getByRole('heading', { name: 'EDUKACYJNA GRA MEMORY' })).toBeVisible();
+  await expect(education.getByRole('heading', { name: 'FISZKI', exact: true })).toBeVisible();
+  await expect(education.getByRole('heading', { name: 'NARZĘDZIA E-LEARNINGOWE' })).toBeVisible();
+  await expect(education.getByRole('heading', { name: book.title, exact: true })).toBeVisible();
+  await expect(education.getByRole('link', { name: 'Pobierz', exact: true })).toHaveAttribute('href', book.download);
+  await expect(education.getByRole('heading', { name: 'Płatny materiał', exact: true })).toHaveCount(0);
+  await expect(page.locator('#rozrywka').getByRole('heading', { name: book.title, exact: true })).toHaveCount(0);
+  await expect(page.locator('#rozrywka').getByRole('heading', { name: 'Inny ebook', exact: true })).toBeVisible();
 });
 test('mobile menu, keyboard close and layout fit a narrow screen', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });

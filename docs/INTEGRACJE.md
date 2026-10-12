@@ -51,8 +51,20 @@ Zapis zainteresowań:
 
 Bez endpointu formularze przygotowują e-mail do wysłania w programie pocztowym. Nie pokazują fałszywego komunikatu „wysłano”.
 
-## Inne klucze API, np. rzeczywisty asystent AI
+## OpenAI — rzeczywista rozmowa z HeDi
 
-Poufne klucze dodawaj jako zmienne serwerowe w **Render → Environment**, bez prefiksu `VITE_`. Wywołanie dostawcy i autoryzację zaimplementuj w `server/app.js` lub module importowanym przez ten serwer. Przeglądarka powinna wywoływać Twój endpoint `/api/...`, bez otrzymywania klucza.
+Kod rozmowy jest gotowy: przeglądarka wywołuje `POST /api/chat`, a serwer korzysta z OpenAI Responses API. Klucz znajduje się wyłącznie na serwerze.
 
-`src/components/ChatWidget.tsx` jest obecnie oznaczoną demonstracją z gotowymi odpowiedziami. Tutaj zastąpisz gotowe odpowiedzi wywołaniem swojego API asystenta. Nie ma jeszcze podłączonego płatnego modelu ani zewnętrznego czatu.
+1. Otwórz **Render → usługa `hedoix-website` → Environment → Add Environment Variable**.
+2. W nazwie wpisz dokładnie `HEDI_OPENAI_API_KEY`. W wartości wpisz swój klucz OpenAI. Możesz wykorzystać istniejący klucz, do którego masz dostęp; jeśli go nie możesz odczytać, utwórz nowy w https://platform.openai.com/api-keys. Klucz musi mieć dostęp do Responses API i wybranego modelu.
+3. Opcjonalnie dodaj `HEDI_OPENAI_MODEL=gpt-4.1-mini`. Jest to model domyślny, więc brak tej zmiennej go nie zmienia.
+4. Zapisz zmienne i wykonaj ponowne wdrożenie.
+5. Na stronie kliknij **HEDI**, wpisz pytanie i sprawdź odpowiedź. `/api/chat/status` z `enabled: true` oznacza obecność klucza; dopiero odpowiedź na wiadomość potwierdza działanie OpenAI.
+
+Klucz wpisany w Baserow nie przenosi się automatycznie do Render. W Baserow może pozostać do jego funkcji AI; strona potrzebuje własnego ustawienia `HEDI_OPENAI_API_KEY` w Render. Nigdy nie używaj `VITE_OPENAI_API_KEY` ani nie wstawiaj klucza do GitHub lub wiadomości na czacie.
+
+**Pliki:** `server/chat.js` zawiera wywołanie OpenAI, kontekst HeDoiX i limity; `src/components/ChatWidget.tsx` obsługuje rozmowę, historię, wysyłkę i błędy. `/api/chat/status` jest publiczną informacją o konfiguracji, bez wartości klucza. Bez klucza HeDi pokazuje niedostępność i odsyła do kontaktu, zamiast udawać rozmowę.
+
+API obsługuje język PL/NL i przekazuje maksymalnie 10 wiadomości, do 6000 znaków. Odpowiedź ma limit 600 tokenów. Obowiązuje 10 żądań na adres IP i 60 łącznie na minutę, maksymalnie 4 równocześnie na instancję. Błędy dostawcy są zwracane bez danych klucza. Rozmowa nie jest zapisywana w bazie strony; żądania mają `store: false`. Przetwarzanie przez dostawcę podlega jego polityce API.
+
+Aktualne testy sprawdzają kontrolowane odpowiedzi OpenAI. Żywe połączenie wymaga prawdziwego klucza i konta API z dostępem do modelu.

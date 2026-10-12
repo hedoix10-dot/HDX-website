@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { registerChat } from './chat.js';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const selectValue = value => typeof value === 'string' ? value : value?.value || '';
@@ -12,12 +13,14 @@ export function publicProduct(row) {
   if (row.published !== true || typeof row.title !== 'string' || !row.title.trim()) return null;
   const category = selectValue(row.category);
   if (!['ebook', 'coloring'].includes(category)) return null;
+  const section = selectValue(row.section) || 'entertainment';
+  if (!['education', 'entertainment'].includes(section)) return null;
   const amount = Number(row.price ?? 0);
   if (!Number.isFinite(amount) || amount < 0) return null;
   const file = row.file?.[0];
   return {
     id: row.id, title: row.title.slice(0, 200), description: String(row.description || '').slice(0, 3000),
-    category, language: selectValue(row.language) || 'pl', price: amount,
+    category, section, language: selectValue(row.language) || 'pl', price: amount,
     cover: httpsUrl(row.cover?.[0]?.url),
     // Public free downloads only. This is not a payment or file authorization service.
     download: amount === 0 ? httpsUrl(file?.url) : null,
@@ -37,6 +40,9 @@ export function createApp({ env = process.env, fetchImpl = fetch } = {}) {
     next();
   });
   app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
+  app.use('/api/chat', express.json({ limit: '32kb' }));
+  registerChat(app, { env, fetchImpl });
+  app.use('/api/chat', (error, _req, res, _next) => res.status(error.type === 'entity.too.large' ? 413 : 400).json({ error: 'invalid_request' }));
   app.get('/api/products', async (req, res) => {
     const page = Number(req.query.page || 1);
     if (!Number.isInteger(page) || page < 1 || page > 100) return res.status(400).json({ error: 'invalid_page' });

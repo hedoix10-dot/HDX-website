@@ -62,3 +62,11 @@ test('SPA deep links and images are served by the production server', async t =>
   assert.equal(image.status, 200);
   assert.match(image.headers.get('content-type'), /image\/jpeg/);
 });
+test('catalog preserves section placement and defaults older rows to entertainment', async t => {
+  const base = await running(t, { env: config, fetchImpl: async () => Response.json({ results: [row, { ...row, id: 2, section: { value: 'education' } }, { ...row, id: 3, section: { value: 'unknown' } }], next: null }) });
+  const data = await (await fetch(`${base}/api/products`)).json();
+  assert.equal(data.results.length, 2);
+  assert.equal(data.results[0].section, 'entertainment');
+  assert.equal(data.results[1].section, 'education');
+  assert.equal(data.results[1].price, 0);
+});

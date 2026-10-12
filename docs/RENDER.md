@@ -42,6 +42,8 @@ Automatyczne wdrażanie na Render jest ustawione na nowe commity. Nie używaj fo
 | `VITE_CONTACT_ENDPOINT` | Adres formularza Formspree | Opcjonalne |
 | `VITE_SIGNUP_ENDPOINT` | Adres formularza Formspree | Opcjonalne |
 | `VITE_WEBHOOK_URL` | Publiczny adres API lub webhooka wspólny dla formularzy | Opcjonalne; oddzielne adresy mają pierwszeństwo |
+| `HEDI_OPENAI_API_KEY` | Twój klucz OpenAI, wyłącznie w panelu Environment | Do rozmowy z HeDi |
+| `HEDI_OPENAI_MODEL` | `gpt-4.1-mini` | Opcjonalne; model domyślny |
 
 Nigdy nie umieszczaj tokenu w kodzie, repozytorium ani wiadomości na czacie. W Render wpisujesz rzeczywisty token; konfiguracja sekretu w środowisku Codex nie przenosi go automatycznie do Render. Zmiany `VITE_*` wymagają przebudowania; ustawienia Baserow są czytane przez serwer przy uruchomieniu.
 

@@ -39,7 +39,7 @@ export default function PackageHero() {
         {packageCards.map((card, i) => {
           const Icon = iconMap[card.icon as keyof typeof iconMap];
           return (
-            <Reveal key={card.title} delay={i * 0.08} className={`panel-card p-8 ${card.featured ? 'border-teal/60 shadow-glow-teal' : 'panel-card-hover'}`}>
+            <Reveal key={card.title} delay={i * 0.08} className="panel-card panel-card-hover p-8">
               <div className="icon-box"><Icon size={20} /></div>
               <h3 className="mt-7 font-display text-[20px] font-black leading-tight">{card.title}</h3>
               <ul className="mt-6 grid gap-4">

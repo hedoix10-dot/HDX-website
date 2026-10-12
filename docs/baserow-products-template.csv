@@ -1,3 +1,4 @@
-title,description,category,language,price,published
-Przykładowy ebook — zastąp własnym,Opis ebooka do uzupełnienia,ebook,pl,0,false
-Przykładowa kolorowanka — zastąp własną,Opis kolorowanki do uzupełnienia,coloring,pl,0,false
+title,description,category,section,language,price,published
+Przykładowy ebook — zastąp własnym,Opis ebooka do uzupełnienia,ebook,entertainment,pl,0,false
+Przykładowa kolorowanka — zastąp własną,Opis kolorowanki do uzupełnienia,coloring,entertainment,pl,0,false
+Przykładowy ebook edukacyjny — zastąp własnym,Opis materiału do nauki niderlandzkiego,ebook,education,pl/nl,0,false

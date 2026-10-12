@@ -1,6 +1,8 @@
 import { useLang } from '../lib/i18n';
 import Reveal from '../components/Reveal';
 import { useContent } from '../lib/useContent';
+import Catalog from './Catalog';
+import { BookOpen } from 'lucide-react';
 
 export default function Education() {
   const { educationCards } = useContent();
@@ -24,6 +26,7 @@ export default function Education() {
           </Reveal>
         ))}
       </div>
+      <div className="mt-14" id="niderlandzki"><Reveal className="panel-card panel-card-hover p-7 md:p-10"><div className="flex flex-wrap items-center gap-4"><div className="icon-box"><BookOpen size={22}/></div><span className="chip border-teal/40 text-teal">{tr('ZA DARMO', 'GRATIS')}</span><span className="font-mono text-xs tracking-mega text-mist">NEDERLANDS</span></div><h3 className="mt-6 font-display text-2xl font-black md:text-3xl">{tr('Ebooki do nauki języka niderlandzkiego', 'E-books om Nederlands te leren')}</h3><p className="mt-4 max-w-3xl text-sm leading-7 text-mist">{tr('Darmowe materiały do samodzielnej nauki niderlandzkiego. Publikacje pojawią się tutaj — zapisz się, jeśli chcesz otrzymywać informacje o nowych ebookach.', 'Gratis materiaal om zelfstandig Nederlands te leren. De publicaties verschijnen hier — meld je aan om op de hoogte te blijven van nieuwe e-books.')}</p><a href="#zapis" className="btn-secondary mt-6">{tr('Powiadom mnie o nowych ebookach', 'Houd me op de hoogte')}</a></Reveal><Catalog section="education"/></div>
       <Reveal className="mt-10 text-center"><a href="#zapis" className="btn-secondary">{tr("WIĘCEJ O EDUKACJI", "MEER OVER EDUCATIE")}</a></Reveal>
     </section>
   );

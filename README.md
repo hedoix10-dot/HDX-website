@@ -20,6 +20,7 @@ Tryb edycji: pozostaw `npm start` uruchomione w jednym terminalu, a w drugim uru
 
 - [Instrukcja Baserow i struktura tabeli](docs/BASEROW.md)
 - [Gdzie podłączyć Baserow i API](docs/INTEGRACJE.md)
+- [Gotowy prompt do AI Baserow](docs/PROMPT-BASEROW.md)
 - [Ustawienia i wdrożenie Render](docs/RENDER.md)
 - `render.yaml`: gotowy Blueprint Web Service.
 - `.env.example`: nazwy ustawień; kopiuj lokalnie do `.env`, nigdy nie commituj tokenów.
@@ -45,6 +46,6 @@ Testy API używają kontrolowanych odpowiedzi Baserow. Nie wymagają zewnętrzne
 
 Główne grafiki, komponenty i style pochodzą z `hedoix-vite-clone.zip`. Zdjęcia hero/close-up mają w paczce rozmiar 334 × 324 px i zostały zachowane. Treści oraz wygląd paczki są głównym wzorem; dokument odtworzenia jest materiałem pomocniczym. Tłumaczenie NL jest przygotowane w projekcie. Poprzednia wersja została zachowana poza repozytorium jako `/workspace/hedoix-before-clone.zip`.
 
-Chat HeDi to oznaczona demonstracja z gotowymi odpowiedziami. Gry, muzyka i e-learning są zapowiedziane jako „wkrótce”. Katalog obsługuje bezpłatne publiczne pobrania. Płatne produkty mają cenę i kontakt; płatności oraz chroniona dystrybucja plików wymagają osobnego wdrożenia.
+Chat HeDi korzysta z OpenAI przez serwerowy endpoint `/api/chat`. W Render Environment dodaj `HEDI_OPENAI_API_KEY`; model domyślny to `gpt-4.1-mini`. Bez klucza chat pokazuje niedostępność i kontakt. Testy OpenAI są symulowane; działanie na żywo wymaga uzupełnienia klucza. Gry, muzyka i e-learning są zapowiedziane jako „wkrótce”. Katalog obsługuje bezpłatne publiczne pobrania. Ebooki do nauki niderlandzkiego trafiają do Edukacji przy `section=education`, `category=ebook`, `price=0`. Pozostałe produkty pozostają w Rozrywce; starsze rekordy bez pola section domyślnie trafiają do Rozrywki. Płatne produkty mają cenę i kontakt; płatności oraz chroniona dystrybucja plików wymagają osobnego wdrożenia.
 
 Przed publikacją uzupełnij dane prawnego administratora w polityce prywatności zgodnie z rzeczywistą firmą oraz dostawcami usług.
