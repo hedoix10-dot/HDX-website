@@ -1,7 +1,7 @@
 # Weryfikacja — 12 października 2026
 
 - Node 24.19.0, npm 11.9.0.
-- Obecna wersja jest oparta na `hedoix-vite-clone.zip`: React 18.3.1, TypeScript 5.9.3, React Router 6.30.6, Vite 5.4.21. Wszystkie 7 plików graficznych/favicon z paczki zachowano bez zmian, potwierdzając zgodność SHA-256.
+- Obecna wersja jest oparta na `hedoix-vite-clone.zip`: React 18.3.1, TypeScript 5.9.3, React Router 6.30.6, Vite 5.4.21. Grafiki z paczki początkowo zachowano bez zmian (SHA-256). Następnie zdjęcia hero/close-up i dashboard uaktualniono do wersji 1024 × 1024 zgodnych z grafikami wskazanymi przez użytkownika.
 - Instalacja powtarzalna: `npm ci --include=dev --cache /workspace/.npm --no-audit --no-fund` zakończona powodzeniem, bez zmiany lockfile.
 - Produkcyjny `npm run build` (kontrola TypeScript + Vite): PASS.
 - `npm test`: **20 PASS**, 0 FAIL, 0 SKIP — 11 testów API (w tym OpenAI) i 9 testów Chromium.

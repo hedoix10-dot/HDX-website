@@ -68,3 +68,12 @@ Klucz wpisany w Baserow nie przenosi się automatycznie do Render. W Baserow mo�
 API obsługuje język PL/NL i przekazuje maksymalnie 10 wiadomości, do 6000 znaków. Odpowiedź ma limit 600 tokenów. Obowiązuje 10 żądań na adres IP i 60 łącznie na minutę, maksymalnie 4 równocześnie na instancję. Błędy dostawcy są zwracane bez danych klucza. Rozmowa nie jest zapisywana w bazie strony; żądania mają `store: false`. Przetwarzanie przez dostawcę podlega jego polityce API.
 
 Aktualne testy sprawdzają kontrolowane odpowiedzi OpenAI. Żywe połączenie wymaga prawdziwego klucza i konta API z dostępem do modelu.
+
+
+## Supabase — kiedy go dołączyć
+
+Dla obecnego katalogu darmowych ebooków najprościej pozostawić Baserow jako miejsce edycji produktów oraz wgrywania PDF-ów i okładek. Potwierdzona tabela Products ma ID 1258474.
+
+Supabase warto dołączyć do osobnych zadań: kont użytkowników, logowania, historii zakupów albo przechowywania plików z dostępem dla uprawnionych użytkowników. Baserow może wtedy nadal być panelem redakcyjnym katalogu. Nie ma potrzeby dublowania rekordów produktów w obu bazach.
+
+Na tym etapie nie dodano Supabase do aplikacji. Rozsądny kolejny krok to połączenie obecnej tabeli Baserow i sprawdzenie pierwszego darmowego PDF-u. Decyzję o Supabase można podjąć przy wdrażaniu kont lub płatnych materiałów.

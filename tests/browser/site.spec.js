@@ -10,7 +10,7 @@ test('desktop renders all sections, real image and no runtime errors', async ({ 
   await expect(page.getByTestId('catalog')).toHaveCount(0);
   const image = page.locator('#start img');
   await expect(image).toBeVisible();
-  expect(await image.evaluate(img => img.complete && img.naturalWidth === 334)).toBeTruthy();
+  expect(await image.evaluate(img => img.complete && img.naturalWidth > 0)).toBeTruthy();
   expect(errors).toEqual([]);
 });
 test('NL language persists and privacy deep links work', async ({ page }) => {

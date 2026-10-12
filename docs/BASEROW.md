@@ -1,5 +1,7 @@
 # Baserow Cloud — ebooki i kolorowanki
 
+Właściciel potwierdził utworzenie bazy HeDoiX oraz pustej tabeli Products (9 pól, 4 widoki). ID tabeli: `1258474`. Do odczytu nadal potrzebny jest Database Token z uprawnieniem Read.
+
 ## Szybkie podłączenie opublikowanej strony
 
 1. W Baserow otwórz ustawienia swojego workspace i znajdź **Database tokens**. Utwórz token dla strony, nadając **Read** do tabeli produktów. To token Baserow; klucz OpenAI dodany wcześniej w Baserow pozostaw w jego konfiguracji.
@@ -29,7 +31,7 @@ Nazwy pól muszą być dokładnie takie jak poniżej (małe litery). Jeśli Base
 | `file` | File | Wgraj PDF; używany pierwszy plik |
 | `published` | Boolean | Włącz, aby pokazać produkt na stronie |
 
-`docs/baserow-products-template.csv` zawiera dwa **nieopublikowane** przykładowe rekordy. Przy imporcie ustaw typy pól zgodnie z tabelą; pliki `cover` i `file` dodaj osobno jako pola File. Rekordy przykładowe wymagają zastąpienia prawdziwymi publikacjami.
+`docs/baserow-products-template.csv` zawiera trzy **nieopublikowane** przykładowe rekordy. Przy imporcie ustaw typy pól zgodnie z tabelą; pliki `cover` i `file` dodaj osobno jako pola File. Rekordy przykładowe wymagają zastąpienia prawdziwymi publikacjami.
 
 ## Darmowe ebooki z dysku — publikacja w Edukacji
 

@@ -1,5 +1,7 @@
 # Podłączenie Render
 
+Adres wskazany przez właściciela: https://hdx-website.onrender.com. Baza Baserow: HeDoiX / Products, ID tabeli `1258474`.
+
 ## Dane do formularza New → Web Service
 
 | Pole | Wartość |
@@ -37,7 +39,7 @@ Automatyczne wdrażanie na Render jest ustawione na nowe commity. Nie używaj fo
 |---|---|---|
 | `NODE_ENV` | `production` | Zalecane |
 | `BASEROW_API_URL` | `https://api.baserow.io` | Baserow Cloud |
-| `BASEROW_TABLE_ID` | ID tabeli `Products` | Do uruchomienia katalogu |
+| `BASEROW_TABLE_ID` | `1258474` | Do uruchomienia katalogu |
 | `BASEROW_TOKEN` | Token Baserow z uprawnieniem Read do tej tabeli | Poufna wartość, wpisz wyłącznie w panelu |
 | `VITE_CONTACT_ENDPOINT` | Adres formularza Formspree | Opcjonalne |
 | `VITE_SIGNUP_ENDPOINT` | Adres formularza Formspree | Opcjonalne |
