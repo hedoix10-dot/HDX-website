@@ -24,7 +24,15 @@ Zapisz zmienne i uruchom ponownie usługę. Token jest potrzebny wyłącznie ser
 
 Bez danych Baserow katalog jest ukryty, a sekcja rozrywki zachowuje zapowiedzi z paczki. Po podłączeniu tabela zasila widok. Widoczne są wyłącznie rekordy z `published=true`, tytułem i kategorią `ebook` lub `coloring`. API nie zwraca linku do płatnego pliku. Nie ma jeszcze płatności ani ochrony dostępu do magazynu plików.
 
-## API formularzy / Make / n8n / Formspree
+## Formularze → Baserow → automatyczne odpowiedzi
+
+Przygotowane endpointy to `POST /api/forms/contact` i `POST /api/forms/newsletter`. W Render dodaj `BASEROW_CONTACT_TABLE_ID` (Contacts) oraz `BASEROW_NEWSLETTER_TABLE_ID` (Subscribers). Istniejący `BASEROW_TOKEN` musi mieć Read + Create na tych dwóch tabelach. Products pozostaje osobną tabelą z uprawnieniem Read.
+
+Pełny prompt do utworzenia tabel, ustawienia SMTP i dwa workflow Baserow są w [AUTOMATYZACJE-BASEROW.md](AUTOMATYZACJE-BASEROW.md). Automatyczne potwierdzenia wysyła Baserow po skonfigurowaniu i opublikowaniu workflow, nie sam serwer strony.
+
+`GET /api/forms/status` zwraca obecność konfiguracji dla każdego formularza. Bez ustawień formularz nadal przygotowuje e-mail do ręcznego wysłania. Po aktywacji pokazuje sukces dopiero po zapisaniu w Baserow. Błędy zachowują wpisane dane. Kontakt nie zapisuje osoby do newslettera. Zapisy na nowości wymagają osobnej zgody; powtórzony e-mail nie tworzy kolejnego wiersza ani ponownego powitania.
+
+## Alternatywne API formularzy / Make / n8n / Formspree
 
 W tym samym miejscu **Render → Environment** dodaj:
 
@@ -49,7 +57,7 @@ Zapis zainteresowań:
 
 **W kodzie:** `src/lib/useFormDelivery.ts` obsługuje wspólne żądania, błędy i tryb e-mail. Same pola i wygląd są w `src/sections/Contact.tsx` oraz `src/sections/Signup.tsx`. Jeśli Twoja usługa wymaga innego formatu, dostosuj tutaj payload.
 
-Bez endpointu formularze przygotowują e-mail do wysłania w programie pocztowym. Nie pokazują fałszywego komunikatu „wysłano”.
+Bez zewnętrznego endpointu formularze używają Baserow, jeśli ich tabele są skonfigurowane. W przeciwnym razie przygotowują e-mail do wysłania w programie pocztowym. Nie pokazują fałszywego komunikatu „wysłano”.
 
 ## OpenAI — rzeczywista rozmowa z HeDi
 

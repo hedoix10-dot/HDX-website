@@ -14,7 +14,6 @@ export default function Contact() {
     const form = e.currentTarget;
     const payload = Object.fromEntries(new FormData(form).entries());
     if (payload.website) return;
-    delete payload.website;
     if (await deliver(payload)) form.reset();
   }
 
@@ -51,11 +50,11 @@ export default function Contact() {
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-teal via-blaze to-teal" />
           <form onSubmit={submit} onChange={clearDraft} className="grid gap-5" data-testid="contact-form">
             <div className="grid gap-5 md:grid-cols-2">
-              <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">{tr("IMIĘ I NAZWISKO *", "VOOR- EN ACHTERNAAM *")}</span><input name="name" required className="input-dark" placeholder="Jan Kowalski" /></label>
-              <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">E-MAIL *</span><input name="email" type="email" required className="input-dark" placeholder="jan@firma.pl" /></label>
+              <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">{tr("IMIĘ I NAZWISKO *", "VOOR- EN ACHTERNAAM *")}</span><input name="name" required maxLength={120} className="input-dark" placeholder="Jan Kowalski" /></label>
+              <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">E-MAIL *</span><input name="email" type="email" required maxLength={254} className="input-dark" placeholder="jan@firma.pl" /></label>
             </div>
-            <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">{tr("FIRMA (OPCJONALNIE)", "BEDRIJF (OPTIONEEL)")}</span><input name="company" className="input-dark" placeholder="Nazwa Twojej firmy" /></label>
-            <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">{tr("WIADOMOŚĆ *", "BERICHT *")}</span><textarea name="message" required className="input-dark min-h-44" placeholder="W czym może pomóc HeDi?" /></label>
+            <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">{tr("FIRMA (OPCJONALNIE)", "BEDRIJF (OPTIONEEL)")}</span><input name="company" maxLength={200} className="input-dark" placeholder="Nazwa Twojej firmy" /></label>
+            <label className="grid gap-2"><span className="font-mono text-[10px] tracking-mega text-mist">{tr("WIADOMOŚĆ *", "BERICHT *")}</span><textarea name="message" required maxLength={5000} className="input-dark min-h-44" placeholder="W czym może pomóc HeDi?" /></label>
             <label className="sr-only" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
             <label className="flex items-start gap-3 text-sm text-mist"><input name="consent" required type="checkbox" className="mt-1 accent-[#FF6A00]" /><span>{tr('Zgadzam się na przetwarzanie moich danych w celu kontaktu zgodnie z', 'Ik geef toestemming voor de verwerking van mijn gegevens volgens het')} <Link to="/polityka-prywatnosci" className="text-teal underline">{tr('polityką prywatności', 'privacybeleid')}</Link>.</span></label>
             {!endpoint && <p className="text-xs leading-6 text-mist">{tr('Formularz przygotuje e-mail. Wyślij go w swoim programie pocztowym.', 'Dit formulier bereidt een e-mail voor. Verzend hem in je e-mailprogramma.')}</p>}

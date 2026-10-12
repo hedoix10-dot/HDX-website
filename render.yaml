@@ -17,5 +17,9 @@ services:
         sync: false
       - key: BASEROW_TOKEN
         sync: false
+      - key: BASEROW_CONTACT_TABLE_ID
+        sync: false
+      - key: BASEROW_NEWSLETTER_TABLE_ID
+        sync: false
       - key: HEDI_OPENAI_MODEL
         value: gpt-4.1-mini

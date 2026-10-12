@@ -41,6 +41,8 @@ Automatyczne wdrażanie na Render jest ustawione na nowe commity. Nie używaj fo
 | `BASEROW_API_URL` | `https://api.baserow.io` | Baserow Cloud |
 | `BASEROW_TABLE_ID` | `1258474` | Do uruchomienia katalogu |
 | `BASEROW_TOKEN` | Token Baserow z uprawnieniem Read do tej tabeli | Poufna wartość, wpisz wyłącznie w panelu |
+| `BASEROW_CONTACT_TABLE_ID` | ID osobnej tabeli Contacts | Do zapisywania zgłoszeń; token wymaga Read + Create |
+| `BASEROW_NEWSLETTER_TABLE_ID` | ID osobnej tabeli Subscribers | Do zapisów na nowości; token wymaga Read + Create |
 | `VITE_CONTACT_ENDPOINT` | Adres formularza Formspree | Opcjonalne |
 | `VITE_SIGNUP_ENDPOINT` | Adres formularza Formspree | Opcjonalne |
 | `VITE_WEBHOOK_URL` | Publiczny adres API lub webhooka wspólny dla formularzy | Opcjonalne; oddzielne adresy mają pierwszeństwo |
@@ -66,6 +68,6 @@ Render nada własny adres usługi — sprawdź go w panelu, nie zakładaj konkre
 3. `/api/health` ma zwracać `{"status":"ok"}`.
 4. Po podłączeniu Baserow `/api/products` ma zwracać `status: "ok"`; zobacz pierwszy opublikowany produkt.
 5. Sprawdź pobranie darmowego PDF. Odpowiedź API nie powinna zawierać tokenu ani linku do płatnego pliku.
-6. Formularz e-mail wymaga wysłania w programie pocztowym; jeśli aktywujesz Formspree, sprawdź otrzymanie zgłoszenia.
+6. Po skonfigurowaniu tabel formularzy sprawdź `/api/forms/status`, wyślij formularz na własny adres i sprawdź wiersz w Baserow oraz e-mail z aktywnego workflow SMTP. Bez ustawień formularz przygotowuje e-mail do ręcznego wysłania. Instrukcje: [AUTOMATYZACJE-BASEROW.md](AUTOMATYZACJE-BASEROW.md).
 
 Oficjalne instrukcje: https://render.com/docs/deploy-node-express-app oraz https://render.com/docs/blueprint-spec.

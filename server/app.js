@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { registerChat } from './chat.js';
+import { registerForms } from './forms.js';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 const selectValue = value => typeof value === 'string' ? value : value?.value || '';
@@ -43,6 +44,9 @@ export function createApp({ env = process.env, fetchImpl = fetch } = {}) {
   app.use('/api/chat', express.json({ limit: '32kb' }));
   registerChat(app, { env, fetchImpl });
   app.use('/api/chat', (error, _req, res, _next) => res.status(error.type === 'entity.too.large' ? 413 : 400).json({ error: 'invalid_request' }));
+  app.use('/api/forms', express.json({ limit: '16kb' }));
+  registerForms(app, { env, fetchImpl });
+  app.use('/api/forms', (error, _req, res, _next) => res.status(error.type === 'entity.too.large' ? 413 : 400).json({ error: 'invalid_request' }));
   app.get('/api/products', async (req, res) => {
     const page = Number(req.query.page || 1);
     if (!Number.isInteger(page) || page < 1 || page > 100) return res.status(400).json({ error: 'invalid_page' });

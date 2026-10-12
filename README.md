@@ -21,17 +21,20 @@ Tryb edycji: pozostaw `npm start` uruchomione w jednym terminalu, a w drugim uru
 - [Instrukcja Baserow i struktura tabeli](docs/BASEROW.md)
 - [Gdzie podłączyć Baserow i API](docs/INTEGRACJE.md)
 - [Gotowy prompt do AI Baserow](docs/PROMPT-BASEROW.md)
+- [Formularze i automatyczne odpowiedzi Baserow](docs/AUTOMATYZACJE-BASEROW.md)
 - [Ustawienia i wdrożenie Render](docs/RENDER.md)
 - `render.yaml`: gotowy Blueprint Web Service.
 - `.env.example`: nazwy ustawień; kopiuj lokalnie do `.env`, nigdy nie commituj tokenów.
 
-Token Baserow jest używany wyłącznie w `server/app.js`. Nigdy nie używaj nazwy `VITE_BASEROW_TOKEN`, ponieważ zmienne `VITE_*` są publiczne. API ma cache 60 s; przeglądarka może dodatkowo zachować odpowiedź 30 s. Katalog pobiera po 100 wierszy Baserow i udostępnia przycisk kolejnej strony. Limit 100 stron chroni serwer przed nieograniczonymi zapytaniami.
+Token Baserow jest używany wyłącznie na serwerze (`server/app.js`, `server/forms.js`). Nigdy nie używaj nazwy `VITE_BASEROW_TOKEN`, ponieważ zmienne `VITE_*` są publiczne. API katalogu ma cache 60 s; przeglądarka może dodatkowo zachować odpowiedź 30 s. Katalog pobiera po 100 wierszy Baserow i udostępnia przycisk kolejnej strony. Limit 100 stron chroni serwer przed nieograniczonymi zapytaniami.
 
 ## Formularze
 
-Domyślnie formularze **przygotowują e-mail** do `Hedoix10@gmail.com`. Użytkownik musi otworzyć wiadomość i wysłać ją w swoim programie pocztowym. Strona nie deklaruje wysłania zgłoszenia w tym trybie.
+Po ustawieniu `BASEROW_CONTACT_TABLE_ID` i `BASEROW_NEWSLETTER_TABLE_ID` formularze zapisują dane przez serwer w tabelach Contacts i Subscribers. Token potrzebuje Read + Create na każdej z nich. Osobne workflow Baserow wysyłają potwierdzenia PL/NL przez SMTP. Szczegóły tabel i automatyzacji: [AUTOMATYZACJE-BASEROW.md](docs/AUTOMATYZACJE-BASEROW.md).
 
-Opcjonalnie ustaw wspólny publiczny endpoint w `VITE_WEBHOOK_URL`, zgodnie z paczką źródłową. Otrzyma JSON z `type: contact` lub `type: newsletter`. Możesz też utworzyć dwa formularze w Formspree i ustawić oddzielne `VITE_CONTACT_ENDPOINT` oraz `VITE_SIGNUP_ENDPOINT`, np. `https://formspree.io/f/TWOJE_ID`. Oddzielny adres ma pierwszeństwo przed wspólnym webhookiem. Są to publiczne adresy formularzy, a nie tokeny. API zewnętrzne musi obsługiwać CORS i JSON; przebuduj aplikację po ustawieniu adresu. Sukces jest pokazywany dopiero po odpowiedzi HTTP 2xx. Do działania formularzy nie jest potrzebny token Baserow.
+Bez konfiguracji tabel formularze **przygotowują e-mail** do `Hedoix10@gmail.com`. Użytkownik musi otworzyć wiadomość i wysłać ją w swoim programie pocztowym. Strona nie deklaruje wysłania zgłoszenia w tym trybie.
+
+Opcjonalnie ustaw wspólny publiczny endpoint w `VITE_WEBHOOK_URL`, zgodnie z paczką źródłową. Otrzyma JSON z `type: contact` lub `type: newsletter`. Możesz też utworzyć dwa formularze w Formspree i ustawić oddzielne `VITE_CONTACT_ENDPOINT` oraz `VITE_SIGNUP_ENDPOINT`, np. `https://formspree.io/f/TWOJE_ID`. Oddzielny adres ma pierwszeństwo przed wspólnym webhookiem; zewnętrzne adresy mają pierwszeństwo przed endpointami Baserow. Są to publiczne adresy formularzy, a nie tokeny. API zewnętrzne musi obsługiwać CORS i JSON; przebuduj aplikację po ustawieniu adresu. Sukces jest pokazywany dopiero po odpowiedzi HTTP 2xx. W trybie zewnętrznego dostawcy nie jest potrzebny token Baserow.
 
 ## Testy
 
