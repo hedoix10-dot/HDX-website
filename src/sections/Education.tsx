@@ -1,0 +1,30 @@
+import { useLang } from '../lib/i18n';
+import Reveal from '../components/Reveal';
+import { useContent } from '../lib/useContent';
+
+export default function Education() {
+  const { educationCards } = useContent();
+  const { tr } = useLang();
+  return (
+    <section id="edukacja" className="container-x py-24">
+      <Reveal>
+        <p className="kicker-line">{tr("// EDUKACJA", "// EDUCATIE")}</p>
+        <h2 className="section-title mt-6">
+          {tr("EDUKACJA", "EDUCATIE")} <span className="text-blaze text-glow-orange">{tr("I NO-CODE", "EN NO-CODE")}</span>
+        </h2>
+        <p className="section-subtitle">{tr("Darmowe aplikacje No-Code i narzędzia e-learningowe dla dzieci i dorosłych.", "Gratis No-Code-apps en e-learningtools voor kinderen en volwassenen.")}</p>
+      </Reveal>
+      <div className="mt-10 grid gap-6 lg:grid-cols-3">
+        {educationCards.map((card, i) => (
+          <Reveal key={card.title} delay={i * 0.07} className="panel-card panel-card-hover p-8">
+            <span className={`chip ${i < 2 ? 'border-blaze/40 text-blaze' : ''}`}>{card.badge}</span>
+            <h3 className="mt-7 font-display text-xl font-black leading-tight">{card.title}</h3>
+            <p className="mt-4 min-h-20 text-sm leading-7 text-mist">{card.text}</p>
+            <div className="mt-7 rounded-full border border-line py-3 text-center font-mono text-[11px] tracking-mega text-mist">{card.status}</div>
+          </Reveal>
+        ))}
+      </div>
+      <Reveal className="mt-10 text-center"><a href="#zapis" className="btn-secondary">{tr("WIĘCEJ O EDUKACJI", "MEER OVER EDUCATIE")}</a></Reveal>
+    </section>
+  );
+}

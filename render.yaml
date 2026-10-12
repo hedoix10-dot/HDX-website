@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: hedoix-website
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASEROW_API_URL
+        value: https://api.baserow.io
+      - key: BASEROW_TABLE_ID
+        sync: false
+      - key: BASEROW_TOKEN
+        sync: false

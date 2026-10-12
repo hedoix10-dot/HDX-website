@@ -1,0 +1,38 @@
+import { ArrowUpRight } from 'lucide-react';
+import Ticker from '../components/Ticker';
+import { useLang } from '../lib/i18n';
+
+export default function Hero() {
+  const { t, tr } = useLang();
+  return (
+    <section id="start" className="relative overflow-hidden pt-[72px]">
+      <div className="container-x grid min-h-[calc(100vh-72px)] items-center gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:py-10">
+        <div>
+          <p className="kicker">{t.eyebrow}</p>
+          <h1 className="mt-7 font-display text-[42px] font-black leading-[0.95] tracking-tight md:text-[74px]">
+            {t.titleA}<br />
+            <span className="text-blaze text-glow-orange">{t.titleB}</span>
+          </h1>
+          <p className="mt-7 max-w-xl text-lg leading-8 text-mist">{t.heroText}</p>
+          <div className="mt-9 flex flex-wrap items-center gap-4">
+            <a href="#automatyzacje" className="btn-primary">{t.ctaOffer}</a>
+            <a href="#kontakt" className="btn-secondary">{t.ctaTalk}<ArrowUpRight size={16} /></a>
+          </div>
+          <p className="mt-10 font-mono text-[11px] tracking-mega text-mist/70">{tr("HEDOIX © 2026 — AI · SAAS · AUTOMATYZACJA", "HEDOIX © 2026 — AI · SAAS · AUTOMATISERING")}</p>
+        </div>
+        <div className="relative mx-auto w-full max-w-[430px]">
+          <div className="absolute -inset-8 rounded-full bg-blaze/10 blur-3xl" />
+          <div className="image-frame float-slow relative aspect-[4/5]">
+            <img src="/images/hedi-hero.jpg" alt="HeDi — maskotka HeDoiX" />
+            <div className="absolute left-4 top-4 rounded-full border border-teal/40 bg-ink/80 px-4 py-2 font-mono text-[10px] tracking-mega text-teal backdrop-blur">
+              HEDI ONLINE
+            </div>
+          </div>
+          <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 rounded-full border border-line bg-panel/95 px-5 py-3 font-mono text-[11px] tracking-mega text-snow shadow-card backdrop-blur">
+            {tr("HeDi — maskotka HeDoiX", "HeDi — de HeDoiX-mascotte")} </div>
+        </div>
+      </div>
+      <Ticker />
+    </section>
+  );
+}

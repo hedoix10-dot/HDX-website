@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#05080A" stroke="#1FE8CF" stroke-opacity="0.45" stroke-width="2"/>
+  <path d="M17 10h6v10h6V10h6v28h-6V26h-6v12h-6z" fill="#FF6A00"/>
+  <text x="32" y="55" font-family="Arial, sans-serif" font-size="15" font-weight="800" fill="#1FE8CF" text-anchor="middle" letter-spacing="1">DX</text>
+</svg>

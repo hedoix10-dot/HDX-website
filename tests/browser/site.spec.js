@@ -1,0 +1,84 @@
+import { test, expect } from '@playwright/test';
+
+test('desktop renders all sections, real image and no runtime errors', async ({ page }) => {
+  const errors = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('AUTOMATYZUJEMY');
+  await expect(page.locator('#automatyzacje')).toBeAttached();
+  for (const id of ['pakiet-hero', 'creative-ai', 'edukacja', 'pomoc', 'rozrywka', 'zapis', 'kontakt']) await expect(page.locator(`#${id}`)).toBeAttached();
+  await expect(page.getByTestId('catalog')).toHaveCount(0);
+  const image = page.locator('#start img');
+  await expect(image).toBeVisible();
+  expect(await image.evaluate(img => img.complete && img.naturalWidth === 334)).toBeTruthy();
+  expect(errors).toEqual([]);
+});
+test('NL language persists and privacy deep links work', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'NL', exact: true }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('WIJ AUTOMATISEREN');
+  await expect(page.locator('#automatyzacje')).toContainText('Drie pijlers');
+  await expect(page.locator('#edukacja')).toContainText('Gratis No-Code');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'nl');
+  await page.goto('/polityka-prywatnosci');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacybeleid');
+  await page.reload();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Privacybeleid');
+});
+test('contact validates consent and prepares an encoded email without claiming delivery', async ({ page }) => {
+  await page.goto('/#kontakt');
+  const form = page.getByTestId('contact-form');
+  await form.getByLabel(/IMIĘ I NAZWISKO/).fill('Anna Kowalska');
+  await form.getByLabel(/E-MAIL/).fill('anna@example.com');
+  await form.getByLabel(/WIADOMOŚĆ/).fill('Potrzebuję strony & automatyzacji.');
+  await form.getByRole('button', { name: 'PRZYGOTUJ WIADOMOŚĆ' }).click();
+  await expect(form.getByRole('link', { name: 'Otwórz wiadomość e-mail' })).toHaveCount(0);
+  await form.getByRole('checkbox').check();
+  await form.getByRole('button', { name: 'PRZYGOTUJ WIADOMOŚĆ' }).click();
+  const href = await form.getByRole('link', { name: 'Otwórz wiadomość e-mail' }).getAttribute('href');
+  expect(href).toContain('mailto:Hedoix10@gmail.com');
+  expect(decodeURIComponent(href)).toContain('Potrzebuję strony & automatyzacji.');
+  await expect(form).not.toContainText('zgłoszenie zostało wysłane');
+});
+test('interest signup prepares selected interests and demo chat responds', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'HEDI', exact: true }).click();
+  await page.getByRole('button', { name: 'Co to Pakiet Hero?' }).click();
+  await expect(page.locator('#hedi-chat')).toContainText('łączy stronę WWW');
+  const form = page.getByTestId('signup-form');
+  await form.getByLabel('Imię', { exact: true }).fill('Jan');
+  await form.getByLabel('E-mail', { exact: true }).fill('jan@example.com');
+  await form.getByRole('button', { name: 'Muzyka AI', exact: true }).click();
+  await form.getByRole('checkbox', { name: /Zgadzam/ }).check();
+  await form.getByRole('button', { name: 'PRZYGOTUJ WIADOMOŚĆ' }).click();
+  const href = await form.getByRole('link', { name: 'Otwórz wiadomość e-mail' }).getAttribute('href');
+  expect(decodeURIComponent(href)).toContain('Muzyka AI');
+});
+test('catalog filters products and exposes free download, handles a failure', async ({ page }) => {
+  await page.route('**/api/products*', route => route.fulfill({ json: { status: 'ok', nextPage: null, results: [{ id: 1, title: 'Poradnik AI', description: 'Test ebook', category: 'ebook', language: 'pl', price: 0, cover: null, download: 'https://files.example.org/ebook.pdf' }, { id: 2, title: 'Kolory biura', description: 'Test coloring', category: 'coloring', language: 'pl', price: 5, cover: null, download: null }] } }));
+  await page.goto('/');
+  const catalog = page.locator('#biblioteka');
+  await expect(catalog.getByRole('heading', { name: 'Poradnik AI' })).toBeVisible();
+  await expect(catalog.getByRole('link', { name: 'Pobierz' })).toHaveAttribute('href', 'https://files.example.org/ebook.pdf');
+  await catalog.getByRole('button', { name: 'Kolorowanki', exact: true }).click();
+  await expect(catalog.getByRole('heading', { name: 'Poradnik AI' })).toHaveCount(0);
+  await expect(catalog.getByRole('link', { name: 'Zapytaj o produkt' })).toBeVisible();
+  await page.route('**/api/products*', route => route.fulfill({ status: 503, json: { error: 'catalog_unavailable' } }));
+  await page.reload();
+  await expect(catalog.getByText('Nie możemy teraz wczytać biblioteki.')).toBeVisible();
+});
+test('mobile menu, keyboard close and layout fit a narrow screen', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Otwórz menu' }).click();
+  await expect(page.getByTestId('mobile-nav-kontakt')).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByTestId('mobile-nav-kontakt')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Otwórz menu' }).click();
+  await page.getByTestId('mobile-nav-kontakt').click();
+  await expect(page).toHaveURL(/#kontakt$/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+  await page.setViewportSize({ width: 320, height: 800 });
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBeTruthy();
+});
