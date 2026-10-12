@@ -113,7 +113,7 @@ export function registerForms(app, { env, fetchImpl }) {
             source: type === 'contact' ? 'website_contact' : type === 'ebook' ? 'website_ebook_request' : 'website_newsletter',
             ...(type === 'ebook' ? {
               owner_subject: `HeDoiX — zamówienie ebooka: ${input.book_title}`,
-              owner_body: `Ebook: ${input.book_title}\nImię: ${input.name}\nE-mail: ${input.email}\nJęzyk: ${input.language}\nID zgłoszenia: ${input.submission_id}\n\nKlient prosi o darmowy ebook. To zgłoszenie nie zapisuje go do newslettera.`,
+              owner_body: `Ebook: ${input.book_title}\nImię: ${input.name}\nE-mail: ${input.email}\nJęzyk: ${input.language}\nID zgłoszenia: ${input.submission_id}\nPDF: https://hdx-website.onrender.com${ebooks.find(book => book.id === input.book_id).downloadUrl}\n\nKlient prosi o darmowy ebook. To zgłoszenie nie zapisuje go do newslettera.`,
               notification_sent: false, fulfilled: false,
             } : { ...confirmation(type, input.language, input), confirmation_sent: false, ...(type === 'contact' ? { status: 'new' } : { active: true }) }),
           };

@@ -115,12 +115,17 @@ W każdej akcji ustaw From name HeDi / HeDoiX oraz From email ten sam Gmail, kt�
 
 ## 5. Odpowiedź z ebookiem — przygotowuje właściciel
 
-Dwa linki na stronie prowadzą do formularzy:
+Dwa ebooki mają na stronie przycisk bezpośredniego pobrania oraz opcjonalny link do formularza:
 
 - `/ebooki/trening-gramatyczny-czasowniki` — E-book Trening Gramatyczny i Czasowniki.
 - `/ebooki/podstawy-nederlands-leren` — E-Book PODSTAWY Nederlands leren.
 
-Własną odpowiedź możesz dodać w Baserow jako kolejny krok SMTP skierowany do **email klienta**, z warunkiem book_id. Użyj publicznego linku do odpowiedniego rzeczywistego PDF-u. Ostatni krok ustawia fulfilled=true i datę po udanej wysyłce. Nie wpisano fikcyjnego PDF-u ani nie włączono wysyłki nieistniejących załączników. Wbudowana akcja SMTP w sprawdzonym schemacie Baserow ma temat i treść; załączniki nie są w niej udostępnione. Jeśli wymagane są załączniki zamiast linków, trzeba skonfigurować osobną obsługę Gmaila/załączników.
+Publiczne adresy przesłanych PDF-ów do użycia w automatycznej odpowiedzi:
+
+- `book_id=trening-gramatyczny-czasowniki`: https://hdx-website.onrender.com/ebooks/trening-gramatyczny-czasowniki.pdf
+- `book_id=podstawy-nederlands-leren`: https://hdx-website.onrender.com/ebooks/podstawy-nederlands-leren.pdf
+
+Własną odpowiedź możesz dodać w Baserow jako kolejny krok SMTP skierowany do **email klienta**, z warunkiem book_id i odpowiednim linkiem powyżej. Ostatni krok ustawia fulfilled=true i datę po udanej wysyłce. Powiadomienie właściciela (`owner_body`) zawiera również link do wybranego PDF-u. Wbudowana akcja SMTP w sprawdzonym schemacie Baserow ma temat i treść; załączniki nie są w niej udostępnione. Jeśli wymagane są załączniki zamiast linków, trzeba skonfigurować osobną obsługę Gmaila/załączników. Sama publikacja PDF-ów nie włącza workflow Gmail ani nie zapisuje pobierających do newslettera.
 
 Na razie bez skonfigurowanej tabeli strona przygotowuje e-mail do ręcznego wysłania i wyraźnie to opisuje. Po konfiguracji zapisuje zgłoszenie w EbookRequests, a rzeczywiste wiadomości wysyła aktywna automatyzacja. Przetestuj na swoim adresie każdy z trzech przepływów.
 

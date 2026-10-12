@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 export default function Logo({ withText = true }: { withText?: boolean }) {
-  const logoUrl = import.meta.env.VITE_BRAND_LOGO_URL;
+  const logoUrl = import.meta.env.VITE_BRAND_LOGO_URL || '/images/hdx-logo.jpg';
   const [imageFailed, setImageFailed] = useState(false);
   return (
     <a href="/#start" className="flex shrink-0 items-center gap-3" aria-label="HeDoiX">

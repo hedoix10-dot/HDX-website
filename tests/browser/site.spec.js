@@ -159,6 +159,34 @@ test('both Dutch ebook links lead to a dedicated form and send the selected book
   await page.goto('/ebooki/podstawy-nederlands-leren');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('E-Book PODSTAWY Nederlands leren');
 });
+test('uploaded free ebooks can be downloaded without a signup and WerkBuddy opens from Education', async ({ page }) => {
+  await page.goto('/#niderlandzki');
+  for (const id of ['trening-gramatyczny-czasowniki', 'podstawy-nederlands-leren']) {
+    const card = page.getByTestId(`ebook-card-${id}`);
+    const cover = card.locator('img');
+    await expect(cover).toBeVisible();
+    await expect.poll(() => cover.evaluate(image => image.complete && image.naturalWidth > 0)).toBeTruthy();
+    const download = page.waitForEvent('download');
+    await card.getByRole('link', { name: 'Pobierz PDF', exact: true }).click();
+    expect((await download).suggestedFilename()).toBe(`${id}.pdf`);
+    await expect(card.getByRole('link', { name: 'Przejdź do formularza', exact: true })).toBeVisible();
+  }
+  const werkbuddy = page.locator('#edukacja').getByRole('link', { name: 'URUCHOM WERKBUDDY', exact: true });
+  await expect(werkbuddy).toHaveAttribute('href', 'https://werkbuddy.onrender.com');
+  await expect(werkbuddy).toHaveAttribute('target', '_blank');
+  await page.getByRole('button', { name: 'NL', exact: true }).click();
+  await expect(page.locator('#edukacja').getByRole('link', { name: 'OPEN WERKBUDDY', exact: true })).toHaveAttribute('href', 'https://werkbuddy.onrender.com');
+});
+test('published cover and PDF from Baserow replace the known ebook card without creating a duplicate', async ({ page }) => {
+  const product = { id: 12, title: 'Podstawy języka niderlandzkiego', description: 'Wydanie z katalogu', category: 'ebook', section: 'education', language: 'pl/nl', price: 0, cover: '/images/ebooks/podstawy-cover.png', download: 'https://files.example.org/podstawy.pdf' };
+  await page.route('**/api/products*', route => route.fulfill({ json: { status: 'ok', nextPage: null, results: [product] } }));
+  await page.goto('/');
+  const card = page.getByTestId('ebook-card-podstawy-nederlands-leren');
+  await expect(card.getByRole('link', { name: 'Pobierz PDF', exact: true })).toHaveAttribute('href', product.download);
+  await expect(card).toContainText(product.description);
+  await expect(page.locator('#edukacja').getByRole('heading', { name: product.title, exact: true })).toHaveCount(0);
+  await expect(card.locator('img')).toHaveAttribute('src', product.cover);
+});
 test('HeDi sends questions and history to the chat API and keeps drafts on errors', async ({ page }) => {
   const requests = [];
   await page.route('**/api/chat/status', route => route.fulfill({ json: { enabled: true } }));

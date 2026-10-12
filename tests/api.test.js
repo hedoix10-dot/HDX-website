@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { createApp } from '../server/app.js';
 
 async function running(t, options = {}) {
@@ -61,6 +62,19 @@ test('SPA deep links and images are served by the production server', async t =>
   const image = await fetch(`${base}/images/hedi-hero.jpg`);
   assert.equal(image.status, 200);
   assert.match(image.headers.get('content-type'), /image\/jpeg/);
+});
+test('both free ebook downloads serve the original PDFs and support partial requests', async t => {
+  const base = await running(t, { env: {} });
+  for (const filename of ['trening-gramatyczny-czasowniki.pdf', 'podstawy-nederlands-leren.pdf']) {
+    const expected = await readFile(new URL(`../public/ebooks/${filename}`, import.meta.url));
+    const response = await fetch(`${base}/ebooks/${filename}`);
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get('content-type'), /application\/pdf/);
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()), expected);
+    const partial = await fetch(`${base}/ebooks/${filename}`, { headers: { Range: 'bytes=0-4' } });
+    assert.equal(partial.status, 206);
+    assert.equal(await partial.text(), '%PDF-');
+  }
 });
 test('catalog preserves section placement and defaults older rows to entertainment', async t => {
   const base = await running(t, { env: config, fetchImpl: async () => Response.json({ results: [row, { ...row, id: 2, section: { value: 'education' } }, { ...row, id: 3, section: { value: 'unknown' } }], next: null }) });

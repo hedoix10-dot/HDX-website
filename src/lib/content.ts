@@ -153,7 +153,7 @@ export const hediCapabilities = [
 export const educationCards = [
   { badge: 'ZA DARMO', title: 'EDUKACYJNA GRA MEMORY', text: 'Prosta gra No-Code do nauki i treningu pamięci — dla dzieci i dorosłych.', status: 'WKRÓTCE' },
   { badge: 'ZA DARMO', title: 'FISZKI', text: 'Fiszki No-Code do nauki języków, pojęć i produktów.', status: 'WKRÓTCE' },
-  { badge: 'WKRÓTCE', title: 'NARZĘDZIA E-LEARNINGOWE', text: 'Interaktywne narzędzia edukacyjne dla dzieci i dorosłych.', status: 'WKRÓTCE' },
+  { badge: 'WERKBUDDY', title: 'NARZĘDZIA E-LEARNINGOWE', text: 'Autorska aplikacja WerkBuddy do nauki języka niderlandzkiego.', status: 'URUCHOM WERKBUDDY', href: 'https://werkbuddy.onrender.com' },
 ];
 
 export const entertainmentCards = [

@@ -1,4 +1,5 @@
 export const nl: Record<string, string> = {
+  'Autorska aplikacja WerkBuddy do nauki języka niderlandzkiego.': 'Onze eigen WerkBuddy-app om Nederlands te leren.', 'URUCHOM WERKBUDDY': 'OPEN WERKBUDDY',
   'Kolorowanki': 'Kleurplaten', 'Ebooki': 'E-books', 'Niderlandzki — darmowe ebooki': 'Nederlands — gratis e-books',
   '// AGENCJA B2B I AUTOMATYZACJE': '// B2B-BUREAU EN AUTOMATISERING', 'AGENCJA': 'BUREAU', 'I': 'EN', 'AUTOMATYZACJE': 'AUTOMATISERING',
   'Trzy filary, na których budujemy przewagę naszych klientów.': 'Drie pijlers waarmee we onze klanten vooruit helpen.', 'AUTOMATYZACJE DLA': 'AUTOMATISERING VOOR', 'FIRM': 'BEDRIJVEN', 'ŁATWE AUTOMATYZACJE': 'SLIMME AUTOMATISERING', 'Z CRM': 'MET CRM',

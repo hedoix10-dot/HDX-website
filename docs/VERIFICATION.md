@@ -1,5 +1,15 @@
 # Weryfikacja — 12 października 2026
 
+## Aktualizacja: darmowe PDF-y, logo i WerkBuddy
+
+- `npm run build`: PASS. `npm run test:api`: 31 PASS, 0 FAIL, 0 SKIP. Wybrane testy Chromium (`--grep 'ebook|Dutch|Education|desktop renders|NL language'`): 8 PASS, 0 FAIL, 0 SKIP. Po uaktualnieniu informacji dla HeDi ponownie wykonano 6 testów czatu: PASS.
+- Oba dostarczone PDF-y są w `public/ebooks`, zachowane bajt w bajt. Test HTTP sprawdza treść, typ `application/pdf` oraz Range/206. Test przeglądarkowy sprawdza pobranie bez zapisu, nazwy plików, załadowanie okładek, opcjonalny formularz oraz nadpisanie znanego ebooka przez opublikowany produkt Baserow bez duplikatu.
+- Okładki to rzeczywiste pierwsze strony PDF-ów (10 i 48 stron); promocyjne mockupy z rozmowy nie zostały użyte jako oryginalne pliki. Oryginalne logo HDX odzyskano z PDF-u i ustawiono domyślnie w nagłówku i stopce.
+- Link WerkBuddy w Edukacji wskazuje `https://werkbuddy.onrender.com`, otwiera nową kartę i ma etykietę PL/NL. Sprawdzono docelowy adres linku; próba sprawdzenia samej aplikacji została zatrzymana przez politykę sieci środowiska.
+- Poniższe wyniki są wcześniejszą kontrolą. Wymagania dotyczące nieprzesłanych PDF-ów i logo zostały rozwiązane przez tę aktualizację. Testy poczty nie oznaczają konfiguracji ani wysłania rzeczywistych wiadomości przez Gmail.
+
+## Wcześniejsza kontrola
+
 - Node 24.19.0, npm 11.9.0.
 - Obecna wersja jest oparta na `hedoix-vite-clone.zip`: React 18.3.1, TypeScript 5.9.3, React Router 6.30.6, Vite 5.4.21. Grafiki z paczki początkowo zachowano bez zmian (SHA-256). Następnie zdjęcia hero/close-up i dashboard uaktualniono do wersji 1024 × 1024 zgodnych z grafikami wskazanymi przez użytkownika.
 - Instalacja powtarzalna: `npm ci --include=dev --cache /workspace/.npm --no-audit --no-fund` zakończona powodzeniem, bez zmiany lockfile.

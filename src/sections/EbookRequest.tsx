@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { BookOpen, Send } from 'lucide-react';
+import { ArrowDownToLine, BookOpen, Send } from 'lucide-react';
 import ebooks from '../../shared/ebooks.json';
 import { useLang } from '../lib/i18n';
 import { useFormDelivery } from '../lib/useFormDelivery';
@@ -23,6 +23,7 @@ export default function EbookRequest() {
       <BookOpen className="text-teal" size={30}/>
       <p className="kicker mt-6">{tr('DARMOWY EBOOK / NIDERLANDZKI', 'GRATIS E-BOOK / NEDERLANDS')}</p>
       <h1 className="mt-6 font-display text-2xl font-black leading-snug md:text-4xl">{book.title}</h1>
+      {book.downloadUrl && <a href={book.downloadUrl} download className="btn-primary mt-6"><ArrowDownToLine size={16}/>{tr('Pobierz PDF', 'PDF downloaden')}</a>}
       <p className="mt-5 leading-7 text-mist">{tr('Zostaw adres e-mail, na który chcesz otrzymać ten ebook. Zgłoszenie przekażemy zespołowi HeDoiX.', 'Laat het e-mailadres achter waarop je dit e-book wilt ontvangen. Je aanvraag wordt doorgestuurd naar het HeDoiX-team.')}</p>
       <form className="mt-8 grid gap-5" onSubmit={submit} onChange={clearDraft} data-testid="ebook-request-form">
         <label className="grid gap-2"><span>{tr('Imię', 'Naam')}</span><input name="name" required maxLength={120} className="input-dark"/></label>

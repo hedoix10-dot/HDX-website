@@ -75,6 +75,8 @@ Przygotowane buckety:
 
 Istniejące załączniki Baserow pozostają dostępne przez swoje adresy. Skrypt nie kopiuje automatycznie bajtów plików między usługami. Jeżeli chcesz przechowywać nowy bezpłatny ebook w Supabase, wgraj PDF w Dashboard → Storage → hdx-free-ebooks, skopiuj publiczny URL i dodaj w Baserow opcjonalne pole URL `file_url`. Dla okładki użyj `cover_url`; nazwę pliku można ustawić w `file_name` (Single line text). Synchronizacja preferuje te adresy, a gdy są puste, używa istniejących pól File `file` i `cover`.
 
+Dwa przesłane darmowe ebooki są już częścią strony w `public/ebooks` i nie wymagają migracji do Storage, aby je pobierać. Możesz później dodać je w Products z `section=education`, `category=ebook`, `price=0`, `published=true`; zgodny tytuł z `shared/ebooks.json` lub jego alias zastąpi dane istniejącego kafelka. Samo pobranie PDF-u nie zapisuje osoby do Subscribers.
+
 Płatnego PDF-u nie umieszczaj w publicznym buckecie. Serwer nie ujawnia w katalogu adresu pliku dla price > 0, ale nie zapewnia autoryzacji zakupów.
 
 ## 6. Potwierdzenia kontaktowe z Supabase
