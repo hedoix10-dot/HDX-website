@@ -1,4 +1,4 @@
 [
-  { "id": "trening-gramatyczny-czasowniki", "title": "E-book Trening Gramatyczny i Czasowniki", "aliases": ["Trening Gramatyczny i Czasowniki"], "downloadUrl": "/ebooks/trening-gramatyczny-czasowniki.pdf", "coverUrl": "/images/ebooks/trening-cover.png", "pages": 48 },
-  { "id": "podstawy-nederlands-leren", "title": "E-Book PODSTAWY Nederlands leren", "aliases": ["PODSTAWY Nederlands leren", "Podstawy języka niderlandzkiego"], "downloadUrl": "/ebooks/podstawy-nederlands-leren.pdf", "coverUrl": "/images/ebooks/podstawy-cover.png", "pages": 10 }
+  { "id": "trening-gramatyczny-czasowniki", "title": "E-book Trening Gramatyczny i Czasowniki", "aliases": ["Trening Gramatyczny i Czasowniki"], "downloadUrl": "/ebooks/trening-gramatyczny-czasowniki.pdf", "coverUrl": "/images/ebooks/trening-cover.png", "pages": 48, "werkbuddyUrl": "https://werkbuddy.onrender.com" },
+  { "id": "podstawy-nederlands-leren", "title": "E-Book PODSTAWY Nederlands leren", "aliases": ["PODSTAWY Nederlands leren", "Podstawy języka niderlandzkiego"], "downloadUrl": "/ebooks/podstawy-nederlands-leren.pdf", "coverUrl": "/images/ebooks/podstawy-cover.png", "pages": 10, "werkbuddyUrl": "https://werkbuddy.onrender.com" }
 ]
