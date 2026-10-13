@@ -23,6 +23,7 @@ export default function EbookRequest() {
       <BookOpen className="text-teal" size={30}/>
       <p className="kicker mt-6">{tr('DARMOWY EBOOK / NIDERLANDZKI', 'GRATIS E-BOOK / NEDERLANDS')}</p>
       <h1 className="mt-6 font-display text-2xl font-black leading-snug md:text-4xl">{book.title}</h1>
+      <p className="mt-5 leading-7 text-mist">{tr(book.description.pl, book.description.nl)}</p>
       {book.downloadUrl && <a href={book.downloadUrl} download className="btn-primary mt-6"><ArrowDownToLine size={16}/>{tr('Pobierz PDF', 'PDF downloaden')}</a>}
       <p className="mt-5 leading-7 text-mist">{tr('Zostaw adres e-mail, na który chcesz otrzymać ten ebook. Zgłoszenie przekażemy zespołowi HeDoiX.', 'Laat het e-mailadres achter waarop je dit e-book wilt ontvangen. Je aanvraag wordt doorgestuurd naar het HeDoiX-team.')}</p>
       <form className="mt-8 grid gap-5" onSubmit={submit} onChange={clearDraft} data-testid="ebook-request-form">

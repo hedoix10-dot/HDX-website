@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 type Product = { id: number; title: string; description: string; category: 'ebook' | 'coloring'; section?: 'education' | 'entertainment'; language: string; price: number; cover: string | null; download: string | null; fileName?: string | null };
 type Category = 'all' | 'ebook' | 'coloring';
-type FeaturedBook = { id: string; title: string; aliases?: string[]; downloadUrl?: string; coverUrl?: string; pages?: number; werkbuddyUrl?: string };
+type FeaturedBook = { id: string; title: string; aliases?: string[]; description?: { pl: string; nl: string }; downloadUrl?: string; coverUrl?: string; pages?: number; werkbuddyUrl?: string };
 const normalizedTitle = (title: string) => title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/^e[-\s]?book\s*/i, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 
 export default function Catalog({ section = 'entertainment', featuredBooks = [] }: { section?: 'education' | 'entertainment'; featuredBooks?: FeaturedBook[] }) {
@@ -44,7 +44,7 @@ export default function Catalog({ section = 'entertainment', featuredBooks = [] 
         <span className="chip absolute bottom-4 left-4 border-teal/40 bg-ink/90 text-teal">{tr('ZA DARMO', 'GRATIS')}</span>
       </div>
       <div className="p-7"><h4 className="font-display text-xl font-black leading-snug">{book.title}</h4>
-        <p className="mt-4 whitespace-pre-line text-sm leading-7 text-mist">{product?.description || tr('Darmowy ebook do samodzielnej nauki języka niderlandzkiego.', 'Een gratis e-book om zelfstandig Nederlands te leren.')}</p>
+        <p className="mt-4 whitespace-pre-line text-sm leading-7 text-mist">{product?.description || (book.description ? tr(book.description.pl, book.description.nl) : tr('Darmowy ebook do samodzielnej nauki języka niderlandzkiego.', 'Een gratis e-book om zelfstandig Nederlands te leren.'))}</p>
         {book.werkbuddyUrl && <p className="mt-2 text-sm leading-7 text-mist">{tr('Zapraszamy do korzystania z aplikacji', 'Probeer ook onze app')} <a href={book.werkbuddyUrl} target="_blank" rel="noreferrer" className="text-teal underline underline-offset-4">WerkBuddy</a>.</p>}
         {book.pages && <p className="mt-4 font-mono text-xs text-teal">PDF · {book.pages} {tr('stron', "pagina's")}</p>}
         <div className="mt-6 flex flex-wrap items-center gap-4">
