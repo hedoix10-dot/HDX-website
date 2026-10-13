@@ -18,7 +18,7 @@ export default function Logo({ withText = true }: { withText?: boolean }) {
         <text x="32" y="55" fontFamily="Unbounded, Arial, sans-serif" fontSize="15" fontWeight="800" fill="#1FE8CF" textAnchor="middle" letterSpacing="1">DX</text>
       </svg>}
       {withText && (
-        <span className="font-display text-lg font-black tracking-tight"><span className="text-blaze">He</span><span className="text-teal">Doi</span><span className="text-blaze">X</span></span>
+        <span className="font-display text-lg font-black tracking-tight"><span className="text-blaze">He</span><span className="text-teal">Doi</span><span className="text-teal">X</span></span>
       )}
     </a>
   );
